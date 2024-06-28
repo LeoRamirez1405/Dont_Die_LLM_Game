@@ -11,11 +11,16 @@ Arquero: Un aficionado al uso de armas a distancia sin mucha experiencia
 Mago: Posee el don de hacer cosas sobrenaturales pero no sabe controlarlo
 Sobreviviente: Capaz de dar un esfuerzo extra en los momentos cruciales"""
 
-PLAYERINIT_STATS = f"""Dado esta descripción de un personaje de videojuego: {}
-y esta descripción del mundo: " + {INITGAME} + " has una asignación a cada uno de estos parámetros: {}. Cada parámetro
+def player_init_stats(player,):
+    return f"""Dado esta descripción de un personaje de videojuego: {player} y
+esta descripción del mundo: {INITGAME} has una asignación a cada uno de estos parámetros: {}. Cada parámetro
 debe tener un número entre 1 y 12.
 La respuesta debe tener este formato:
 <habilidad> = <cantidad>
 Ejemplo:
 Vida = 5
 """
+
+def challenge(history, player, features):    
+    return f"""En el mundo: {INITGAME}. Dado el siguiente historial de desafios: {history} y el siguiente jugador: {player} con las caracteristicas siguientes: {features}
+genera un nuevo desafio para el jugador de forma tal que el mismo deba utilizar su ingenio para luchar y sobrevivir."""
