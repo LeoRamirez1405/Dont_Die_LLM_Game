@@ -1,22 +1,30 @@
 import requests
-import json
+from enum import Enum
 
-url = "https://api.fireworks.ai/inference/v1/chat/completions"
-payload = {
-  "model": "accounts/fireworks/models/llama-v3-70b-instruct",
-  "max_tokens": 1024,
-  "top_p": 1,
-  "top_k": 40,
-  "presence_penalty": 0,
-  "frequency_penalty": 0,
-  "temperature": 0.6,
-  "messages": []
-}
-headers = {
-  "Accept": "application/json",
-  "Content-Type": "application/json",
-  "Authorization": "Bearer <API_KEY>"
-}
-response = requests.request("POST", url, json=payload, headers=headers)
+class UserType(Enum):
+    USER = "user"
+    SYSTEM = "system"
 
-print(response.text)
+class ChatDontDie:
+    def __init__(self) -> None:    
+        self.url = "https://api.fireworks.ai/inference/v1/chat/completions"
+
+    def send_simple_request(self,role:UserType,message:str):
+        payload = {
+            "messages": [
+                {
+                    "content": message,
+                    "role": role,
+                }
+            ],
+            "model": "accounts/fireworks/models/llama-v3-70b-instruct",
+            "response_format": {"type": "text"}
+        }
+        headers = {
+            "Authorization": "Bearer HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5",
+            "Content-Type": "application/json"
+        }
+        return requests.request("POST", self.url, json=payload, headers=headers).content
+
+
+print(response)

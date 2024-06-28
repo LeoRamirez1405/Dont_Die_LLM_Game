@@ -23,6 +23,20 @@ Vida = 5
 Fuerza = 7
 """
 
-def challenge(history, player, features):    
-    return f"""En el mundo: {INITGAME}. Dado el siguiente historial de desafios: {history} y el siguiente jugador: {player} con las caracteristicas siguientes: {features}
+def challenge(world, history, player, features):    
+    return f"""En el mundo: {world}. Dado el siguiente historial de desafios: {history} y el siguiente jugador: {player} con las caracteristicas siguientes: {features}
 genera un nuevo desafio para el jugador de forma tal que el mismo deba utilizar su ingenio para luchar y sobrevivir."""
+
+def post_action_survive(situation,world, response):
+    return f"""Dada la siguiente situación: {situation} en este mundo: {world} y esta respuesta del jugador {response}. Valora esta respuesta del jugador y responde Si (en caso
+de que dicha acción lo haría sobrevivir) o No (En caso contrario)."""
+
+def post_action_appropriate(situation,world, response, features):
+    return f"""Dada la siguiente situación: {situation} en este mundo: {world}, esta respuesta del jugador {response} y las habilidades del mismo {features}. Valora esta respuesta del jugador y responde Si (en caso
+de que dicha acción se corresponde con lo que puede hacer el jugador con los skills que tiene y en el mundo en el que se encuentra) o No (En caso contrario)."""
+
+def post_action_development(challenge, action, player, features):
+    return f"""Di como se desenvolvió el challenge {challenge} cuya respuesta del jugador fue {action}. Dime que obtuvo el jugador {player} segun su acción tomada en esta situación, ten en cuenta que la respuesta que quiero
+es para actualizar las estadísticas del jugador. Sus caracteristicas son las siguientes {features}."""
+    
+    
