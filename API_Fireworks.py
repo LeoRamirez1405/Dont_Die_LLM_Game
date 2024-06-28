@@ -4,7 +4,8 @@ from enum import Enum
 class UserType(Enum):
     USER = "user"
     SYSTEM = "system"
-
+    ASSISTANT = "assistant"
+    
 class ChatDontDie:
     def __init__(self) -> None:    
         self.url = "https://api.fireworks.ai/inference/v1/chat/completions"
