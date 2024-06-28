@@ -24,7 +24,9 @@ class ChatDontDie:
             "Authorization": "Bearer HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5",
             "Content-Type": "application/json"
         }
-        return requests.request("POST", self.url, json=payload, headers=headers).content
+        return ((requests.request("POST", self.url, json=payload, headers=headers).json()['choices'])[0])['message']['content']
 
 
+chat = ChatDontDie()
+response = chat.send_simple_request(UserType.USER.value,"Hola, como puedo calcular el seno de un angulo?")
 print(response)
