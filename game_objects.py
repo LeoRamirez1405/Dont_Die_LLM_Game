@@ -10,7 +10,7 @@ class weapon(item):
         super.__init__(name, description, pow)
 
 class character():
-    def __init__(self, name: str, type, strength, intelligence, agelity, health, luck):
+    def __init__(self, name: str, type: int , strength: int , intelligence: int , agelity: int , health: int, luck: int):
         self.name = name
         self.type = type
         self.strength = strength
@@ -19,11 +19,14 @@ class character():
         self.health = health
         self.luck = luck
 
-    def state_character(self, update_state) -> str:
+    def state_character(self, update_state: str) -> str:
         self.body_state = update_state
     
-    def resumen_character(self, update_state) -> str:
+    def resumen_character(self, update_state: str) -> str:
         self.resumen_character = update_state
+    
+
+
 
 
     
