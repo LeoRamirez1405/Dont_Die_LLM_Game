@@ -19,10 +19,12 @@ class character():
         self.health = health
         self.luck = luck
 
-         
-
-
     def state_character(self, update_state) -> str:
         self.body_state = update_state
+    
+    def resumen_character(self, update_state) -> str:
+        self.resumen_character = update_state
+
+
     
 
