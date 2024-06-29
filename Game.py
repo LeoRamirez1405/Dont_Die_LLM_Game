@@ -6,7 +6,6 @@ from nlc import *
 
 class Game:
     def __init__(self):
-
         self.player
         self.history = History()
         self.world = ""
@@ -14,6 +13,8 @@ class Game:
         self.chat = API()
         self.opportunities = 3
         self.gameOver = False
+        
+        # Functions calls
 
     def Play(self):
 
