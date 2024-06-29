@@ -1,4 +1,3 @@
--
 from enum import Enum
 class fc(Enum):
     SITUATION_SOLVER = 0
