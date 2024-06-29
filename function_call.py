@@ -31,4 +31,26 @@ def fc_situation_solver(strength, agility, intelligence, health, luck) -> dict:
 
     return res
 
+def fc_init_player_(name:str,type:str,strength:int, agility:int, intelligence:int, health:int, luck:int) -> dict:
+    # print(f"{strength=} {agility=} {intelligence=}")
+    res = dict()
+    res['name'] = name
+    res['type'] = type
+    res['strength'] = strength
+    res['intelligence'] = intelligence
+    res['agility'] = agility
+    res['health'] = health
+    res['luck'] = luck
+  
+    return res
+
+def fc_valid_action(possible:bool, survives:bool) -> bool:
+    """
+    Dada la situación y la respuesta del jugador, se evalua si la acción es posible y si sobrevive.
+    """
+    if possible and survives:
+        return True
+    else:
+        return False 
+
 

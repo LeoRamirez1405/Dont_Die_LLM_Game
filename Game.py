@@ -5,6 +5,7 @@ from history import History
 from tools import *
 from function_call import *
 import openai
+import random
 
 client = openai.OpenAI(
     base_url = "https://api.fireworks.ai/inference/v1",
@@ -14,7 +15,9 @@ client = openai.OpenAI(
 class Game:
     def __init__(self):
         self.destiny = random()
-        self.fc_situation_solver_attr = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
+        self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
+        self.fc_valid_action = Function_Call(client, [Tools[fc.VALID_ACTION]], fc_valid_action)
+        self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
         
         self.player = 8
         self.history = History()
@@ -24,6 +27,16 @@ class Game:
         self.chat = API()
         self.opportunities = 3
         self.gameOver = False
+        
+    def possible_Action(self, situation, world, response, features) -> bool:
+        return bool(post_action_appropriate(situation, world, response, features))
+    
+    def survive_Action(self, situation, world, response, features) -> bool:
+        return bool(post_action_survive(situation, world, response, features))
+         
+    
+    def bad_Action(self, situation, world, response, features) -> str:
+        return bad_result(situation, world, response, features)
 
     def Play(self):
 
@@ -57,10 +70,9 @@ class Game:
                 self.gameOver = True
                 return 
             
-
         #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
 
-        post_action = self.situation_Solver() # Desenlace de la situación 
+        post_action = self.situation_Solver(situation, self.world, response, self.player.features()) # Desenlace de la situación
 
         print(post_action)
 
@@ -82,11 +94,11 @@ class Game:
         return self.chat.send_simple_request(UserType.SYSTEM.value, request)
 
     def situation_Solver(self, situation, world, response, player, features) -> str:
-        prompt = post_action_development(situation, world, response, player, features)
+        prompt = post_action_development(situation, world, response, features)
         result = self.chat.send_simple_request(UserType.USER.value, prompt)
         
         # Function call
-        self.fc_situation_solver_attr.call(result)
+        self.fc_situation_solver.call(result)
         
         return result
    
