@@ -9,7 +9,7 @@ class Game:
         self.history = ""
         self.world = ""
         self.turn
-        self.chat = ChatDontDie()
+        self.chat = API()
         self.opportunities = 3
         self.gameOver = False
 
