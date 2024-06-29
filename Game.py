@@ -2,19 +2,26 @@ from game_objects import *
 from prompts import *
 from API_Fireworks import * 
 from history import History
-from nlc import *
+from tools import *
+from function_call import *
+import openai
+
+client = openai.OpenAI(
+    base_url = "https://api.fireworks.ai/inference/v1",
+    api_key = "HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5"
+)
 
 class Game:
     def __init__(self):
-        self.player
+        self.fc_situation_solver_attr = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
+        
+        self.player = 8
         self.history = History()
         self.world = ""
-        self.turn
+        self.turn = 0
         self.chat = API()
         self.opportunities = 3
         self.gameOver = False
-        
-        # Functions calls
 
     def Play(self):
 
@@ -54,9 +61,12 @@ class Game:
     def situation_Solver(self, situation, world, response, player, features) -> str:
         prompt = post_action_development(situation, world, response, player, features)
         result = self.chat.send_simple_request(UserType.USER.value, prompt)
-        fc_situation_solver(result)
+        
+        # Function call
+        self.fc_situation_solver_attr.call(result)
+        
         return result
-
+   
     def story_Resumen(self) -> str:
         return self.history.summary()
 
@@ -74,3 +84,6 @@ class Game:
     def endGame(self) -> bool:
         pass
     
+content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
+game = Game()
+game.fc_situation_solver_attr.call(content)

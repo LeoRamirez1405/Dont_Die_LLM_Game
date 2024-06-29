@@ -2,17 +2,16 @@ import openai
 import json
 from openai import OpenAI
 
-class FunctionCall:
-    def __init__(self, client: OpenAI, tool, content, func):
+class Function_Call:
+    def __init__(self, client: OpenAI, tool, func):
         self.client = client
         self.tool = tool
-        self.content = content
         self.func = func
         
-    def call(self):
+    def call(self, content):
         chat_completion = self.client.chat.completions.create(
             model="accounts/fireworks/models/firefunction-v2",
-            messages=[{"role": "user", "content": f"{self.content}"}],
+            messages=[{"role": "user", "content": f"{content}"}],
             tools=self.tool,
             temperature=0.1)
         # print(chat_completion.choices[0].message.model_dump_json(indent=4))
@@ -22,13 +21,6 @@ class FunctionCall:
         print(local)
         return local
     
-    
-    
-client = openai.OpenAI(
-    base_url = "https://api.fireworks.ai/inference/v1",
-    api_key = "HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5"
-)
-
 def fc_situation_solver(strength, agility, intelligence, health, luck) -> dict:
     res = dict()
     res['strength'] = strength
@@ -36,45 +28,7 @@ def fc_situation_solver(strength, agility, intelligence, health, luck) -> dict:
     res['agility'] = agility
     res['health'] = health
     res['luck'] = luck
-  
+
     return res
 
-content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
-tool = [
-        {
-            "type": "function",
-            "function": {
-                "name": "fc_situation_solver",
-                "description": "Solve a situation based on the given attributes.",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "strength": {
-                            "type": "integer",
-                            "description": "Strength attribute value."
-                        },
-                        "agility": {
-                            "type": "integer",
-                            "description": "Agility attribute value."
-                        },
-                        "intelligence": {
-                            "type": "integer",
-                            "description": "Intelligence attribute value."
-                        },
-                        "health": {
-                            "type": "integer",
-                            "description": "Health attribute value."
-                        },
-                        "luck": {
-                            "type": "integer",
-                            "description": "Luck attribute value."
-                        }
-                    },
-                    "required": ["strength", "agility", "intelligence", "health", "luck"]
-                }
-            }
-        }
-    ]
 
-func_call = FunctionCall(client, tool, content, fc_situation_solver)
-func_call.call()
