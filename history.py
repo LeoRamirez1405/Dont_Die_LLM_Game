@@ -41,7 +41,7 @@ class History:
         
         """
         
-        return self.api.send_simple_request(UserType.ASSISTANT.value, prompt) 
+        return self.api.send_simple_request(UserType.USER.value, prompt) 
     
 hist = History()
 # hist.increess("Te encuentras un lobo en el bosque", "El jugador golpea al lobo con la rama de un arbol y el lobo muere")

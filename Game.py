@@ -35,11 +35,7 @@ class Game:
         if self.endGame():
             pass
 
-        return 
-
-        
-
-            
+        return         
 
     def situation_solver(self) -> str:
         pass
