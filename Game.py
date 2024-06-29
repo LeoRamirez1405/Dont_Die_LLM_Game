@@ -1,12 +1,14 @@
 from game_objects import *
 from prompts import *
 from API_Fireworks import * 
+from history import History
+from nlc import *
 
 class Game:
     def __init__(self):
 
         self.player
-        self.history = ""
+        self.history = History()
         self.world = ""
         self.turn
         self.chat = API()
@@ -42,19 +44,20 @@ class Game:
         if self.endGame():
             pass
 
-        return 
+        return         
 
     def challange_Moment(self, world, history, player, features) -> str:
         request = challenge( world, history, player, features)
         return self.chat.send_simple_request(UserType.SYSTEM.value, request)
 
     def situation_Solver(self, situation, world, response, player, features) -> str:
-        request = post_action_development(situation, world, response, player, features)
-        return self.chat.send_simple_request(UserType.USER.value, request)
-        
+        prompt = post_action_development(situation, world, response, player, features)
+        result = self.chat.send_simple_request(UserType.USER.value, prompt)
+        fc_situation_solver(result)
+        return result
 
     def story_Resumen(self) -> str:
-        return 
+        return self.history.summary()
 
     def valid_Action(self, situation, world, response, features) -> bool:
         possible = post_action_appropriate(situation, world, response, features)
