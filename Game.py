@@ -5,6 +5,7 @@ from history import History
 from tools import *
 from function_call import *
 import openai
+import random
 
 client = openai.OpenAI(
     base_url = "https://api.fireworks.ai/inference/v1",
@@ -13,15 +14,33 @@ client = openai.OpenAI(
 
 class Game:
     def __init__(self):
+<<<<<<< HEAD
         self.fc_situation_solver_attr = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
+=======
+        self.destiny = random()
+        self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
+        self.fc_valid_action = Function_Call(client, [Tools[fc.VALID_ACTION]], fc_valid_action)
+        self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
+>>>>>>> 517769fed767444e4ade42aaa41f8ab1ee3be2c0
         
         self.player = 8
         self.history = History()
         self.world = ""
         self.turn = 0
+        self.turn = 0
         self.chat = API()
         self.opportunities = 3
         self.gameOver = False
+        
+    def possible_Action(self, situation, world, response, features) -> bool:
+        return bool(post_action_appropriate(situation, world, response, features))
+    
+    def survive_Action(self, situation, world, response, features) -> bool:
+        return bool(post_action_survive(situation, world, response, features))
+         
+    
+    def bad_Action(self, situation, world, response, features) -> str:
+        return bad_result(situation, world, response, features)
 
     def Play(self):
 
@@ -39,11 +58,29 @@ class Game:
             self.opportunities-=1
             if self.opportunities == 0:
                 #todo implementar baneo por perdida de oportunidades
+<<<<<<< HEAD
                 pass
 
         #* Resultado de la acción (cambios de estidisticas del personaje, items, armas)
+=======
+                print("Has perdido")
+                self.gameOver = True
+                return 
+        
+        if not self.survive_Action(self, situation, self.world, response, self.player.features()):
+            bad_answer = self.bad_Action(self, situation, self.world, response, self.player.features())
+            print(bad_answer)
+            self.opportunities-=1
+            if self.opportunities == 0:
+                #todo implementar baneo por perdida de oportunidades
+                print("Has perdido")
+                self.gameOver = True
+                return 
+            
+        #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
+>>>>>>> 517769fed767444e4ade42aaa41f8ab1ee3be2c0
 
-        post_action = self.situation_Solver() # Desenlace de la situación 
+        post_action = self.situation_Solver(situation, self.world, response, self.player.features()) # Desenlace de la situación
 
         new_items =  self.item_Post_Action(situation, player_action, self.player) # Nuevo item
 
@@ -59,11 +96,11 @@ class Game:
         return self.chat.send_simple_request(UserType.SYSTEM.value, request)
 
     def situation_Solver(self, situation, world, response, player, features) -> str:
-        prompt = post_action_development(situation, world, response, player, features)
+        prompt = post_action_development(situation, world, response, features)
         result = self.chat.send_simple_request(UserType.USER.value, prompt)
         
         # Function call
-        self.fc_situation_solver_attr.call(result)
+        self.fc_situation_solver.call(result)
         
         return result
    

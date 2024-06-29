@@ -35,8 +35,8 @@ def post_action_appropriate(situation,world, response, features):
     return f"""Dada la siguiente situación: {situation} en este mundo: {world}, esta respuesta del jugador {response} y las habilidades del mismo {features}. Valora esta respuesta del jugador y responde 1 (en caso
 de que dicha acción se corresponde con lo que puede hacer el jugador con los skills que tiene y en el mundo en el que se encuentra) o 0 (En caso contrario)."""
 
-def post_action_development(challenge, world, action, player, features):
-    return f"""Di como se desenvolvió el challenge {challenge} que ocurre en este mundo {world} cuya respuesta del jugador fue {action}. Dime que obtuvo el jugador {player} segun su acción tomada en esta situación, ten en cuenta que la respuesta que quiero
+def post_action_development(challenge, world, action, features):
+    return f"""Di como se desenvolvió el challenge {challenge} que ocurre en este mundo {world} cuya respuesta del jugador fue {action}. Dime que obtuvo el jugador segun su acción tomada en esta situación, ten en cuenta que la respuesta que quiero
 es para actualizar las estadísticas del jugador. Sus caracteristicas son las siguientes {features}."""
     
 def bad_result(situation, world, action, features):
