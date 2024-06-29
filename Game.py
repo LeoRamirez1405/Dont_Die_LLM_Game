@@ -14,14 +14,10 @@ client = openai.OpenAI(
 
 class Game:
     def __init__(self):
-<<<<<<< HEAD
-        self.fc_situation_solver_attr = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
-=======
         self.destiny = random()
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_valid_action = Function_Call(client, [Tools[fc.VALID_ACTION]], fc_valid_action)
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
->>>>>>> 517769fed767444e4ade42aaa41f8ab1ee3be2c0
         
         self.player = 8
         self.history = History()
@@ -52,17 +48,14 @@ class Game:
 
         print(situation)
 
-        player_action = input() # Respuesta del jugador 
+        response = input("¿Cómo va actuar en esta situación?") # Respuesta del jugador 
 
-        if not self.valid_Action(player_action):
+        if not self.possible_Action(self, situation, self.world, response, self.player.features()):
+            bad_answer = self.bad_Action(self, situation, self.world, response, self.player.features())
+            print(bad_answer)
             self.opportunities-=1
             if self.opportunities == 0:
                 #todo implementar baneo por perdida de oportunidades
-<<<<<<< HEAD
-                pass
-
-        #* Resultado de la acción (cambios de estidisticas del personaje, items, armas)
-=======
                 print("Has perdido")
                 self.gameOver = True
                 return 
@@ -78,16 +71,21 @@ class Game:
                 return 
             
         #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
->>>>>>> 517769fed767444e4ade42aaa41f8ab1ee3be2c0
 
         post_action = self.situation_Solver(situation, self.world, response, self.player.features()) # Desenlace de la situación
 
-        new_items =  self.item_Post_Action(situation, player_action, self.player) # Nuevo item
+        print(post_action)
 
-        new_weapons =  self.item_Post_Action(situation, player_action, self.player) # Nueva arma
+        #loss_item = self.loss_Item_Post_Action(situation, response)
+        #update_weapon = self.update_Weapons_Post_Action(situation, response)
+        #loss_staistics = self.loss_Statistics_Post_Action(situation, response)
+        #new_items =  self.item_Post_Action(situation, response, self.player) # Nuevo item
+        #new_weapons =  self.item_Post_Action(situation, response, self.player) # Nueva arma
 
-        if self.endGame():
-            pass
+
+
+        #if self.endGame():
+        #    pass
 
         return         
 
@@ -116,9 +114,11 @@ class Game:
     def item_Post_Action(self) -> item:
         return 
         pass
-    def weapon_Post_Action(self) -> weapon:
+
+    def loss_Weapons_Post_Action(self):
         pass
-    def endGame(self) -> bool:
+
+    def loss_Statistics_Post_Action(self):
         pass
     
 content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
