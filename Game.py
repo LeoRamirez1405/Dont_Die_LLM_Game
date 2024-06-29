@@ -1,8 +1,15 @@
 from game_objects import *
+from prompts import *
+from API_Fireworks import * 
+
 class Game:
     def __init__(self):
+
         self.player
+        self.history = ""
+        self.world = ""
         self.turn
+        self.chat = API()
         self.opportunities = 3
         self.gameOver = False
 
@@ -12,9 +19,9 @@ class Game:
             pass
         self.turn += 1
 
-        turn_history = self.turn_History() # Situación a enfrentarse el jugador en este turno
+        situation = self.challange_Moment(self.world, self.history, self.player.resumen_character, self.player.features()) # Situación a enfrentarse el jugador en este turno
 
-        print(turn_history)
+        print(situation)
 
         player_action = input() # Respuesta del jugador 
 
@@ -26,28 +33,40 @@ class Game:
 
         #* Resultado de la acción (cambios de estidisticas del personaje, items, armas)
 
-        post_action = self.situation_solver() # Desenlace de la situación 
+        post_action = self.situation_Solver() # Desenlace de la situación 
 
-        new_items =  self.item_Post_Action(turn_history, player_action, self.player) # Nuevo item
+        new_items =  self.item_Post_Action(situation, player_action, self.player) # Nuevo item
 
-        new_weapons =  self.item_Post_Action(turn_history, player_action, self.player) # Nueva arma
+        new_weapons =  self.item_Post_Action(situation, player_action, self.player) # Nueva arma
 
         if self.endGame():
             pass
 
         return         
 
-    def situation_solver(self) -> str:
-        pass
+    def challange_Moment(self, world, history, player, features) -> str:
+        request = challenge( world, history, player, features)
+        return self.chat.send_simple_request(UserType.SYSTEM.value, request)
+
+    def situation_Solver(self, situation, world, response, player, features) -> str:
+        request = post_action_development(situation, world, response, player, features)
+        return self.chat.send_simple_request(UserType.USER.value, request)
+        
+
     def story_Resumen(self) -> str:
-        pass
-    def valid_Action(self) -> bool:
-        pass
+        return 
+
+    def valid_Action(self, situation, world, response, features) -> bool:
+        possible = post_action_appropriate(situation, world, response, features)
+        survives = post_action_survive(situation, world, response)
+        
+        return bool(survives) and bool(possible)
+
     def item_Post_Action(self) -> item:
+        return 
         pass
     def weapon_Post_Action(self) -> weapon:
         pass
     def endGame(self) -> bool:
         pass
-    def turn_History(self) -> str:
-        pass 
+    
