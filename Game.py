@@ -14,7 +14,8 @@ client = openai.OpenAI(
 
 class Game:
     def __init__(self):
-        self.destiny = random()
+        # self.destiny = random()
+        self.destiny = 0
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_valid_action = Function_Call(client, [Tools[fc.VALID_ACTION]], fc_valid_action)
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
@@ -121,6 +122,6 @@ class Game:
     def loss_Statistics_Post_Action(self):
         pass
     
-content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
-game = Game()
-game.fc_situation_solver_attr.call(content)
+# content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
+# game = Game()
+# game.fc_situation_solver_attr.call(content)
