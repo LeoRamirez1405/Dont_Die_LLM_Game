@@ -28,7 +28,9 @@ class character():
     
     def resumen_character(self, update_state: str) -> str:
         self.resumen_character = update_state
-    
+        
+    def features(self):
+        return f"Type: {self.type}\nStrength: {self.strength}\nIntelligence: {self.intelligence}\nAgility: {self.agility}\nHealth: {self.health}\nLuck: {self.luck}"
     def __str__(self):
         # Formateando la salida como una cadena que muestra todos los campos
         return f"Character Info:\nName: {self.name}\nType: {self.type}\nStrength: {self.strength}\nIntelligence: {self.intelligence}\nAgility: {self.agility}\nHealth: {self.health}\nLuck: {self.luck}"
