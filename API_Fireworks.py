@@ -6,7 +6,7 @@ class UserType(Enum):
     SYSTEM = "system"
     ASSISTANT = "assistant"
     
-class ChatDontDie:
+class API:
     def __init__(self) -> None:    
         self.url = "https://api.fireworks.ai/inference/v1/chat/completions"
 
@@ -28,6 +28,6 @@ class ChatDontDie:
         return ((requests.request("POST", self.url, json=payload, headers=headers).json()['choices'])[0])['message']['content']
 
 
-chat = ChatDontDie()
-response = chat.send_simple_request(UserType.USER.value,"Hola, como puedo calcular el seno de un angulo?")
-print(response)
+# chat = API()
+# response = chat.send_simple_request(UserType.USER.value,"Hola, como puedo calcular el seno de un angulo?")
+# print(response)
