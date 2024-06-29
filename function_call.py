@@ -31,4 +31,42 @@ def fc_situation_solver(strength, agility, intelligence, health, luck) -> dict:
 
     return res
 
+content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
+tool = [
+        {
+            "type": "function",
+            "function": {
+                "name": "fc_situation_solver",
+                "description": "Solve a situation based on the given attributes.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "strength": {
+                            "type": "integer",
+                            "description": "Strength attribute value."
+                        },
+                        "agility": {
+                            "type": "integer",
+                            "description": "Agility attribute value."
+                        },
+                        "intelligence": {
+                            "type": "integer",
+                            "description": "Intelligence attribute value."
+                        },
+                        "health": {
+                            "type": "integer",
+                            "description": "Health attribute value."
+                        },
+                        "luck": {
+                            "type": "integer",
+                            "description": "Luck attribute value."
+                        }
+                    },
+                    "required": ["strength", "agility", "intelligence", "health", "luck"]
+                }
+            }
+        }
+    ]
 
+func_call = FunctionCall(client, tool, content, fc_situation_solver)
+func_call.call()
