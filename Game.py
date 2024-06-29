@@ -37,6 +37,8 @@ class Game:
     
     def bad_Action(self, situation, world, response, features) -> str:
         return bad_result(situation, world, response, features)
+    
+    
 
     def Play(self):
 
@@ -105,11 +107,7 @@ class Game:
     def story_Resumen(self) -> str:
         return self.history.summary()
 
-    def valid_Action(self, situation, world, response, features) -> bool:
-        possible = post_action_appropriate(situation, world, response, features)
-        survives = post_action_survive(situation, world, response)
-        
-        return bool(survives) and bool(possible)
+
 
     def item_Post_Action(self) -> item:
         return 

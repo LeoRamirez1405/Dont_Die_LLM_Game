@@ -44,13 +44,15 @@ def fc_init_player_(name:str,type:str,strength:int, agility:int, intelligence:in
   
     return res
 
-def fc_valid_action(possible:bool, survives:bool) -> bool:
+def fc_possible_action(possible:bool) -> bool:
     """
     Dada la situación y la respuesta del jugador, se evalua si la acción es posible y si sobrevive.
     """
-    if possible and survives:
-        return True
-    else:
-        return False 
+    return possible
 
+def fc_survives_action(survives:bool) -> bool:
+    """
+    Dada la situación y la respuesta del jugador, se evalua si la acción es posible y si sobrevive.
+    """
+    return survives
 

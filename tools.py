@@ -1,9 +1,10 @@
-
+-
 from enum import Enum
 class fc(Enum):
     SITUATION_SOLVER = 0
     INIT_PLAYER = 1
-    VALID_ACTION = 2
+    SURVIVE_ACTION = 2
+    POSSIBLE_ACTION = 3
 
 Tools = {
     fc.SITUATION_SOLVER:
@@ -83,11 +84,11 @@ Tools = {
         },
     },
     
-    fc.VALID_ACTION: {
+    fc.POSSIBLE_ACTION: {
         "type": "function",
         "function": {
-            "name": "fc_valid_action",
-            "description": "Evaluates if an action is possible and if the player survives based on the given situation.",
+            "name": "fc_possible_action",
+            "description": "Evaluates if the player survives according to the given situation.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -95,13 +96,31 @@ Tools = {
                         "type": "boolean",
                         "description": "Indicates if the action is possible."
                     },
+                },
+                "required": ["possible"],
+            },
+        },
+    },
+    fc.SURVIVES_ACTION: {
+        "type": "function",
+        "function": {
+            "name": "fc_survives_action",
+            "description": "Evaluates if player is survives and if the player survives based on the given situation.",
+            "parameters": {
+                "type": "object",
+                "properties": {
                     "survives": {
                         "type": "boolean",
                         "description": "Indicates if the player survives the action."
                     }
                 },
-                "required": ["possible", "survives"],
+                "required": ["survives"],
             },
         },
     }
 }
+
+    
+
+
+    
