@@ -14,67 +14,71 @@ client = openai.OpenAI(
 
 class Game:
     def __init__(self):
+        self.chat = API().send_simple_request
+        self.world = self.chat(INITGAME)
         self.destiny = random()
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_valid_action = Function_Call(client, [Tools[fc.VALID_ACTION]], fc_valid_action)
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
-        
-        self.player = 8
+        self.player:character = self.initPlayer()
         self.history = History()
-        self.world = ""
         self.turn = 0
-        self.turn = 0
-        self.chat = API()
         self.opportunities = 3
         self.gameOver = False
         
-    def possible_Action(self, situation, world, response, features) -> bool:
-        return bool(post_action_appropriate(situation, world, response, features))
+    def initPlayer(self):
+        options = self.chat(player_init_op(self.world))
+        print(options)
+        response = self.chat(input())
+        init_stats = player_init_stats(self.world, response, self.player.features_as_types())
+        result:character = self.fc_init_player.call(init_stats)
+        return result
     
-    def survive_Action(self, situation, world, response, features) -> bool:
-        return bool(post_action_survive(situation, world, response, features))
+    # def possible_Action(self, situation, world, response, features) -> bool:
+    #     return bool(post_action_appropriate(situation, world, response, features))
+    
+    # def survive_Action(self, situation, world, response, features) -> bool:
+    #     return bool(post_action_survive(situation, world, response, features))
          
     
-    def bad_Action(self, situation, world, response, features) -> str:
-        return bad_result(situation, world, response, features)
+    # def bad_Action(self, situation, world, response, features) -> str:
+    #     return bad_result(situation, world, response, features)
 
     def Play(self):
 
-        if self.turn > 0 and (self.turn % 5) == 0: #Todo La idea de esto es ir aumentado la dificultad del juego
-            pass
-        self.turn += 1
+        while not self.gameOver:
+            self.turn += 1
 
-        situation = self.challange_Moment(self.world, self.history, self.player.resumen_character, self.player.features()) # Situación a enfrentarse el jugador en este turno
+            situation = self.challange_Moment(self.world, self.history, self.player.resumen_character, self.player.features()) # Situación a enfrentarse el jugador en este turno
 
-        print(situation)
+            print(situation)
 
-        response = input("¿Cómo va actuar en esta situación?") # Respuesta del jugador 
+            response = input("¿Cómo va actuar en esta situación?:") # Respuesta del jugador 
+            self.chat(UserType.USER.value, response)
+            if not self.valid_Action(self, situation, self.world, response, self.player.features()):
+                print("Respuesta no válida. Tus habilidades no son suficientes para realizar esta acción. Pierdes una oportunidad.")
+                self.opportunities-=1
+                if self.opportunities == 0:
+                    #todo implementar baneo por perdida de oportunidades
+                    print("Has perdido")
+                    self.gameOver = True
+                    return 
 
-        if not self.possible_Action(self, situation, self.world, response, self.player.features()):
-            bad_answer = self.bad_Action(self, situation, self.world, response, self.player.features())
-            print(bad_answer)
-            self.opportunities-=1
-            if self.opportunities == 0:
-                #todo implementar baneo por perdida de oportunidades
-                print("Has perdido")
-                self.gameOver = True
-                return 
-        
-        if not self.survive_Action(self, situation, self.world, response, self.player.features()):
-            bad_answer = self.bad_Action(self, situation, self.world, response, self.player.features())
-            print(bad_answer)
-            self.opportunities-=1
-            if self.opportunities == 0:
-                #todo implementar baneo por perdida de oportunidades
-                print("Has perdido")
-                self.gameOver = True
-                return 
-            
-        #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
+            # if not self.survive_Action(self, situation, self.world, response, self.player.features()):
+            #     bad_answer = self.bad_Action(self, situation, self.world, response, self.player.features())
+            #     print(bad_answer)
+            #     self.opportunities-=1
+            #     if self.opportunities == 0:
+            #         #todo implementar baneo por perdida de oportunidades
+            #         print("Has perdido")
+            #         self.gameOver = True
+            #         return 
 
-        post_action = self.situation_Solver(situation, self.world, response, self.player.features()) # Desenlace de la situación
+            #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
 
-        print(post_action)
+            post_action = self.situation_Solver(situation, self.world, response, self.player.features_as_types()) # Desenlace de la situación
+
+            print(post_action)
 
         #loss_item = self.loss_Item_Post_Action(situation, response)
         #update_weapon = self.update_Weapons_Post_Action(situation, response)
@@ -90,16 +94,13 @@ class Game:
         return         
 
     def challange_Moment(self, world, history, player, features) -> str:
-        request = challenge( world, history, player, features)
-        return self.chat.send_simple_request(UserType.SYSTEM.value, request)
+        request = challenge(world, history, player, features)
+        return self.chat(request)
 
     def situation_Solver(self, situation, world, response, player, features) -> str:
         prompt = post_action_development(situation, world, response, features)
-        result = self.chat.send_simple_request(UserType.USER.value, prompt)
-        
-        # Function call
+        result = self.chat(prompt)
         self.fc_situation_solver.call(result)
-        
         return result
    
     def story_Resumen(self) -> str:
@@ -108,11 +109,9 @@ class Game:
     def valid_Action(self, situation, world, response, features) -> bool:
         possible = post_action_appropriate(situation, world, response, features)
         survives = post_action_survive(situation, world, response)
-        
         return bool(survives) and bool(possible)
 
     def item_Post_Action(self) -> item:
-        return 
         pass
 
     def loss_Weapons_Post_Action(self):
@@ -121,6 +120,4 @@ class Game:
     def loss_Statistics_Post_Action(self):
         pass
     
-content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
 game = Game()
-game.fc_situation_solver_attr.call(content)
