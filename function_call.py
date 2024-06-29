@@ -90,7 +90,7 @@ def fc_situation_solver_(strength, agility, intelligence, health, luck) -> dict:
     return res
 
 content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
-# print(fc_situation_solver(content))
+print(fc_situation_solver(content))
 # fc_situation_solver(content)
 
 
@@ -130,5 +130,5 @@ tool = [
         }
     ]
 
-func_call = FunctionCall(client, tool, content, fc_situation_solver_)
-func_call.call()
+#func_call = FunctionCall(client, tool, content, fc_situation_solver_)
+#func_call.call()
