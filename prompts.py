@@ -39,4 +39,24 @@ def post_action_development(challenge, world, action, player, features):
     return f"""Di como se desenvolvió el challenge {challenge} que ocurre en este mundo {world} cuya respuesta del jugador fue {action}. Dime que obtuvo el jugador {player} segun su acción tomada en esta situación, ten en cuenta que la respuesta que quiero
 es para actualizar las estadísticas del jugador. Sus caracteristicas son las siguientes {features}."""
     
-    
+def bad_result(situation, world, action, features):
+    return f"""Dada la siguiente situación: {situation} en este mundo: {world}, esta respuesta del jugador {action} y las habilidades del mismo {features}. Devuelva una historia donde el personaje del juagador sufre un revés"""
+
+def obtein_item_post_action(challenge, world, action, player, features):
+    pass
+
+def obtein_weapon_post_action(challenge, world, action, player, features):
+    pass
+
+def obtein_staistics_post_action(challenge, world, action, player, features):
+    pass
+
+
+def loss_item_post_action_(challenge, world, action, player, features):
+    pass
+
+def loss_weapon_post_action(challenge, world, action, player, features):
+    pass 
+
+def loss_staistics_post_action(challenge, world, action, player, features):
+    pass
