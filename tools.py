@@ -1,11 +1,9 @@
--
 from enum import Enum
 class fc(Enum):
     SITUATION_SOLVER = 0
     INIT_PLAYER = 1
-    SURVIVE_ACTION = 2
-    POSSIBLE_ACTION = 3
-
+    POSSIBLE_ACTION = 2
+    SURVIVES_ACTION = 3
 Tools = {
     fc.SITUATION_SOLVER:
         {

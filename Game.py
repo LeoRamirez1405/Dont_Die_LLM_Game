@@ -5,7 +5,7 @@ from history import History
 from tools import *
 from function_call import *
 import openai
-import random
+# import random
 
 client = openai.OpenAI(
     base_url = "https://api.fireworks.ai/inference/v1",
@@ -16,11 +16,14 @@ class Game:
     def __init__(self):
         self.chat = API().send_simple_request
         self.world = self.chat(INITGAME)
-        self.destiny = random()
-        self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
-        self.fc_valid_action = Function_Call(client, [Tools[fc.VALID_ACTION]], fc_valid_action)
-        self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
+        print(self.world)
+        print('-'*100)
+        # self.destiny = random()
         self.player:character = self.initPlayer()
+        self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
+        self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
+        self.fc_survives_action = Function_Call(client, [Tools[fc.SURVIVES_ACTION]], fc_survives_action)
+        self.fc_possible_action = Function_Call(client, [Tools[fc.POSSIBLE_ACTION]], fc_possible_action)
         self.history = History()
         self.turn = 0
         self.opportunities = 3
@@ -30,7 +33,8 @@ class Game:
         options = self.chat(player_init_op(self.world))
         print(options)
         response = self.chat(input())
-        init_stats = player_init_stats(self.world, response, self.player.features_as_types())
+        init_stats = player_init_stats(self.world, response, character.features_as_types())
+        print(init_stats)
         result:character = self.fc_init_player.call(init_stats)
         return result
     
@@ -55,28 +59,23 @@ class Game:
 
             response = input("¿Cómo va actuar en esta situación?:") # Respuesta del jugador 
             self.chat(UserType.USER.value, response)
-            if not self.valid_Action(self, situation, self.world, response, self.player.features()):
-                print("Respuesta no válida. Tus habilidades no son suficientes para realizar esta acción. Pierdes una oportunidad.")
+            if not self.fc_possible_action.call(post_action_appropriate(situation, self.world, response, self.features())):
+                print("Respuesta no válida. Tus habilidades no se corresponden a las reglas de tu mundo. Pierdes una oportunidad.")
                 self.opportunities-=1
-                if self.opportunities == 0:
+                
+
+            if not self.fc_survives_action.call(post_action_survive(situation, self.world, response)):
+                print("Respuesta no válida. Tus habilidades no son suficientes para superar el reto. Pierdes una oportunidad.")
+                self.opportunities-=1
+            
+            if self.opportunities == 0:
                     #todo implementar baneo por perdida de oportunidades
                     print("Has perdido")
                     self.gameOver = True
                     return 
-
-            # if not self.survive_Action(self, situation, self.world, response, self.player.features()):
-            #     bad_answer = self.bad_Action(self, situation, self.world, response, self.player.features())
-            #     print(bad_answer)
-            #     self.opportunities-=1
-            #     if self.opportunities == 0:
-            #         #todo implementar baneo por perdida de oportunidades
-            #         print("Has perdido")
-            #         self.gameOver = True
-            #         return 
-
             #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
 
-            post_action = self.situation_Solver(situation, self.world, response, self.player.features_as_types()) # Desenlace de la situación
+            post_action = self.situation_Solver(situation, self.world, response, self.player.features()) # Desenlace de la situación
 
             print(post_action)
 
@@ -105,11 +104,6 @@ class Game:
    
     def story_Resumen(self) -> str:
         return self.history.summary()
-
-    def valid_Action(self, situation, world, response, features) -> bool:
-        possible = post_action_appropriate(situation, world, response, features)
-        survives = post_action_survive(situation, world, response)
-        return bool(survives) and bool(possible)
 
     def item_Post_Action(self) -> item:
         pass

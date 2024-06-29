@@ -34,7 +34,8 @@ class character():
     def __str__(self):
         # Formateando la salida como una cadena que muestra todos los campos
         return f"Character Info:\nName: {self.name}\nType: {self.type}\nStrength: {self.strength}\nIntelligence: {self.intelligence}\nAgility: {self.agility}\nHealth: {self.health}\nLuck: {self.luck}"
-    def features_as_types(self):
+    @staticmethod
+    def features_as_types():
         return f"Type: \nStrength: \nIntelligence: \nAgility: \nHealth: \nLuck:"
 
 
