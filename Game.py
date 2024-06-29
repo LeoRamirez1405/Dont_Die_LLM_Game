@@ -31,7 +31,7 @@ class Game:
                 #todo implementar baneo por perdida de oportunidades
                 pass
 
-        #* Resultado de la acción (cambios de estidisticas del personaje, items, armas)
+        #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
 
         post_action = self.situation_Solver() # Desenlace de la situación 
 
@@ -59,8 +59,8 @@ class Game:
     def valid_Action(self, situation, world, response, features) -> bool:
         possible = post_action_appropriate(situation, world, response, features)
         survives = post_action_survive(situation, world, response)
-        
-        return bool(survives) and bool(possible)
+        result = fc_valid_action(possible, survives)
+        return result
 
     def item_Post_Action(self) -> item:
         return 
