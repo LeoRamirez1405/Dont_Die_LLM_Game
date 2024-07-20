@@ -16,7 +16,9 @@ class Game:
     def __init__(self):
         self.chat = API().send_simple_request
         self.world = self.chat(INITGAME)
-        self.destiny = random()
+        print(self.world)
+        # self.destiny = random()
+        self.destiny = 8
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_valid_action = Function_Call(client, [Tools[fc.VALID_ACTION]], fc_valid_action)
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
@@ -28,7 +30,7 @@ class Game:
         
     def initPlayer(self):
         options = self.chat(player_init_op(self.world))
-        print(options)
+        # print(options)
         response = self.chat(input())
         init_stats = player_init_stats(self.world, response, self.player.features_as_types())
         result:character = self.fc_init_player.call(init_stats)
