@@ -42,13 +42,13 @@ es para actualizar las estadísticas del jugador. Sus caracteristicas son las si
 def bad_result(situation, world, action, features):
     return f"""Dada la siguiente situación: {situation} en este mundo: {world}, esta respuesta del jugador {action} y las habilidades del mismo {features}. Devuelva una historia donde el personaje del juagador sufre un revés"""
 
-def obtein_item_post_action(challenge, world, action, player, features):
+def obtain_item_post_action(challenge, world, action, player, features):
     pass
 
-def obtein_weapon_post_action(challenge, world, action, player, features):
+def obtain_weapon_post_action(challenge, world, action, player, features):
     pass
 
-def obtein_staistics_post_action(challenge, world, action, player, features):
+def obtain_staistics_post_action(challenge, world, action, player, features):
     pass
 
 

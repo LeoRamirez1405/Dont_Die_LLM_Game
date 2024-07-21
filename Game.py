@@ -1,6 +1,7 @@
 from game_objects import *
 from prompts import *
-from API_Fireworks import * 
+# from API_Fireworks import * 
+from API_Gemini import * 
 from history import History
 from tools import *
 from function_call import *
@@ -23,6 +24,7 @@ class Game:
         # self.player:character = self.initPlayer()
         
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
+        self.player:character = self.initPlayer()
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_survives_action = Function_Call(client, [Tools[fc.SURVIVES_ACTION]], fc_survives_action)
         self.fc_possible_action = Function_Call(client, [Tools[fc.POSSIBLE_ACTION]], fc_possible_action)

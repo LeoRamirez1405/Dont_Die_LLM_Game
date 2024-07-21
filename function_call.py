@@ -23,11 +23,11 @@ class Function_Call:
     
 def fc_situation_solver(strength, agility, intelligence, health, luck) -> dict:
     res = dict()
-    res['strength'] = strength
-    res['intelligence'] = intelligence
-    res['agility'] = agility
-    res['health'] = health
-    res['luck'] = luck
+    res['strength'] += strength
+    res['intelligence'] += intelligence
+    res['agility'] += agility
+    res['health'] += health
+    res['luck'] += luck
 
     return res
 
