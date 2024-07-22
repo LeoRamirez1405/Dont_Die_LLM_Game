@@ -10,7 +10,8 @@ import openai
 
 client = openai.OpenAI(
     base_url = "https://api.fireworks.ai/inference/v1",
-    api_key = "HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5"
+    # api_key = "HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5"
+    api_key = "wWUu45VYHt84DrkTOGIZnGu6f3DlxqPKcM4r7AVFOa6KGAZA"
 )
 
 class Game:
@@ -29,6 +30,7 @@ class Game:
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_survives_action = Function_Call(client, [Tools[fc.SURVIVES_ACTION]], fc_survives_action)
         self.fc_possible_action = Function_Call(client, [Tools[fc.POSSIBLE_ACTION]], fc_possible_action)
+        
         self.history = History()
         self.turn = 0
         self.opportunities = 3
@@ -47,7 +49,7 @@ class Game:
     def select_player(self, response):
         # response = self.chat(input())
         init_stats = player_init_stats(self.world, response, character.features_as_types())
-        print(init_stats)
+        # print(f'\n\ninit_stats\n{init_stats}')
         result:character = self.fc_init_player.call(init_stats)
         
         self.player = result

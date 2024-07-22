@@ -62,6 +62,8 @@ st.write(character_options_str)
 # print(f'character_options: \n {character_options_str}')
 
 index_selected_character = st.selectbox("Elige tu personaje:", [i+1 for i in range(3)])
+st.write(len(players_options_list))
+st.write(f"index_selected_character: {index_selected_character - 1}")
 selected_character = players_options_list[index_selected_character - 1]
 
 # Botón para iniciar el juego

@@ -1,0 +1,10 @@
+{"player": 
+    {
+        "type" : "Ingeniero/a del Metal",
+        "strength": 8,
+        "intelligence": 10,
+        "agility": 6,
+        "health": 9,
+        "luck": 5
+    }
+}
