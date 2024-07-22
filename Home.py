@@ -1,17 +1,25 @@
 import streamlit as st
 from src.Game import Game
-import json
+import json, os
 
 st.set_page_config(page_title="Don't Die", page_icon="👻")
 st.markdown("# Don't Die 👻: Sobrevive o Muere Intentando")
 # st.markdown("## Un Juego de Aventura en el Umbral de la Muerte")
 
+game = Game()
+
+def delete_object():
+    path = 'data/'
+    try:
+      os.remove(f'{path}players_options.json')
+      print("Archivo borrado correctamente.")
+    except FileNotFoundError:
+      print("Error: El archivo no se encuentra.")
+
 try:
-    game: Game = st.session_state.game
-    world = game.world
-    
-    history = st.session_state.history
-    situation = st.ssesion_state.situation
+    with open('data/world.json', 'r') as f:
+        data = json.load(f)
+        world = game.world = data['world']
     st.success('Loaded game')
 except:
     game = Game()
@@ -19,6 +27,9 @@ except:
     with open('data/world.json', 'w') as f:
         json.dump({'world': game.world}, f)
         
+    # Borrar los jugadores anteriores
+    delete_object()
+    
     st.session_state.game = game
         
     history = st.session_state.history = []
@@ -36,6 +47,8 @@ if st.sidebar.button("Regenerar mundo"):
     
     with open('data/world.json', 'w') as f:
         json.dump({'world': game.world}, f)
+    
+    delete_object()
     
     st.session_state.game = game
     st.write(game.world)

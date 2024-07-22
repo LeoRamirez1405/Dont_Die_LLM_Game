@@ -6,26 +6,15 @@ import json
 def get_players_options(options_list):
     players_options = []
     
-    print(f'get_players_options: {len(options_list)}')
-    # for index, opt in enumerate(players_options):
-    #     print(f'Option {index}')
-    #     print(opt)
+    # print(f'get_players_options: {len(options_list)}')
     opt = 0
     while opt < len(options_list) - 1:
-    # for opt in range(len(options_list) - 1):
         print('OPTION')
         print(f'{options_list[opt]} \n {options_list[opt+1]}')
         players_options.append(f'{options_list[opt]} \n {options_list[opt+1]}')
         opt += 2
 
     return players_options
-
-#def show_players_page():
-# try:
-#     game: Game = st.session_state.game
-#     history = st.session_state.history
-#     situation = st.ssesion_state.situation
-
 
 game = Game()
 
@@ -46,10 +35,6 @@ try:
         character_options_str = data['character_options_str']
         players_options_list = data['players_options_list']
         
-    with open('data/player.json', 'r') as f:
-        data = json.load(f)
-        player = data['player']
-        
     st.success('Loaded game')
     
 except:
@@ -63,6 +48,13 @@ except:
     player = None
     
     st.success('Generated game')
+    
+try:
+    with open('data/player.json', 'r') as f:
+            data = json.load(f)
+            player = data['player']
+except:
+    player = None
 
 # Opciones de selección de personajes
 st.write(character_options_str)
@@ -74,7 +66,7 @@ selected_character = players_options_list[index_selected_character - 1]
 # Botón para iniciar el juego
 if st.sidebar.button("Comenzar a jugar"):
     
-    if not player:
+    if not selected_character:
         st.warning('You need to select a player first')
         st.stop()
     
