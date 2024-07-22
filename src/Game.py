@@ -1,7 +1,7 @@
 from src.game_objects import *
 from src.prompts import *
-# from API_Fireworks import * 
-from src.API_Gemini import * 
+from API_Fireworks import * 
+# from src.API_Gemini import * 
 from src.history import History
 from src.tools import *
 from src.function_call import *
