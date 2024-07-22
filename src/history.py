@@ -1,5 +1,5 @@
 # from API_Fireworks import UserType, API
-from API_Gemini import UserType, API
+from src.API_Gemini import UserType, API
 
 class History:
     def __init__(self) -> None:

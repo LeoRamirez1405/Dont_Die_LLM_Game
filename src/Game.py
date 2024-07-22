@@ -1,10 +1,10 @@
-from game_objects import *
-from prompts import *
+from src.game_objects import *
+from src.prompts import *
 # from API_Fireworks import * 
-from API_Gemini import * 
-from history import History
-from tools import *
-from function_call import *
+from src.API_Gemini import * 
+from src.history import History
+from src.tools import *
+from src.function_call import *
 import openai
 # import random
 
@@ -16,15 +16,18 @@ client = openai.OpenAI(
 class Game:
     def __init__(self):
         self.chat = API().send_simple_request
-        self.world = self.chat(INITGAME)
-        print(self.world)
+        # self.world = self.chat(INITGAME)
+        self.world = None
+        # print('-'*100)
+        # print(self.world)
+        print('WORLD')
         print('-'*100)
         
         # self.destiny = random()
-        # self.player:character = self.initPlayer()
+        self.player = None
         
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
-        self.player:character = self.initPlayer()
+        # self.player:character = self.initPlayer()
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_survives_action = Function_Call(client, [Tools[fc.SURVIVES_ACTION]], fc_survives_action)
         self.fc_possible_action = Function_Call(client, [Tools[fc.POSSIBLE_ACTION]], fc_possible_action)
@@ -33,8 +36,12 @@ class Game:
         self.opportunities = 3
         self.gameOver = False
         
-    def get_players_to_select(self):
-        return self.chat(player_init_op(self.world))
+    def generate_world(self):
+        self.world = self.chat(INITGAME)
+        return self.world
+        
+    def get_players_to_select(self, world = None):
+        return self.chat(player_init_op(world)) if world else self.chat(player_init_op(self.world))
     
     def select_player(self, response):
         response = self.chat(input())
