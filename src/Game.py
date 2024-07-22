@@ -20,8 +20,6 @@ class Game:
         self.world = None
         # print('-'*100)
         # print(self.world)
-        print('WORLD')
-        print('-'*100)
         
         # self.destiny = random()
         self.player = None
@@ -37,6 +35,9 @@ class Game:
         self.gameOver = False
         
     def generate_world(self):
+        print('WORLD')
+        print('-'*100)
+
         self.world = self.chat(INITGAME)
         return self.world
         
@@ -44,7 +45,7 @@ class Game:
         return self.chat(player_init_op(world)) if world else self.chat(player_init_op(self.world))
     
     def select_player(self, response):
-        response = self.chat(input())
+        # response = self.chat(input())
         init_stats = player_init_stats(self.world, response, character.features_as_types())
         print(init_stats)
         result:character = self.fc_init_player.call(init_stats)
@@ -77,7 +78,6 @@ class Game:
             if not self.fc_possible_action.call(post_action_appropriate(situation, self.world, response, self.features())):
                 print("Respuesta no válida. Tus habilidades no se corresponden a las reglas de tu mundo. Pierdes una oportunidad.")
                 self.opportunities-=1
-                
 
             if not self.fc_survives_action.call(post_action_survive(situation, self.world, response)):
                 print("Respuesta no válida. Tus habilidades no son suficientes para superar el reto. Pierdes una oportunidad.")

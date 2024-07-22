@@ -9,8 +9,8 @@ def get_players_options(options_list):
     # print(f'get_players_options: {len(options_list)}')
     opt = 0
     while opt < len(options_list) - 1:
-        print('OPTION')
-        print(f'{options_list[opt]} \n {options_list[opt+1]}')
+        # print('OPTION')
+        # print(f'{options_list[opt]} \n {options_list[opt+1]}')
         players_options.append(f'{options_list[opt]} \n {options_list[opt+1]}')
         opt += 2
 
@@ -24,7 +24,8 @@ try:
         data = json.load(f)
         game.world = data['world']
         world = game.world
-except:
+except Exception as e:
+    st.error(e)
     st.warning('You need to generate the world first')
     st.stop()
     
@@ -35,7 +36,7 @@ try:
         character_options_str = data['character_options_str']
         players_options_list = data['players_options_list']
         
-    st.success('Loaded game')
+    st.success('Loaded players')
     
 except:
     character_options_str = game.get_players_to_select()
@@ -47,7 +48,7 @@ except:
             'players_options_list': players_options_list}, f) 
     player = None
     
-    st.success('Generated game')
+    st.success('Generated players')
     
 try:
     with open('data/player.json', 'r') as f:
@@ -58,7 +59,7 @@ except:
 
 # Opciones de selección de personajes
 st.write(character_options_str)
-print(f'character_options: \n {character_options_str}')
+# print(f'character_options: \n {character_options_str}')
 
 index_selected_character = st.selectbox("Elige tu personaje:", [i+1 for i in range(3)])
 selected_character = players_options_list[index_selected_character - 1]
@@ -66,9 +67,14 @@ selected_character = players_options_list[index_selected_character - 1]
 # Botón para iniciar el juego
 if st.sidebar.button("Comenzar a jugar"):
     
+    # print('selected_character')
+    # print(selected_character)
+        
     if not selected_character:
         st.warning('You need to select a player first')
         st.stop()
+    
+    st.success(f"Iniciando el juego con: \n {selected_character[:4]}...")
     
     player = game.select_player(selected_character)
     st.session_state.game = game
@@ -76,6 +82,4 @@ if st.sidebar.button("Comenzar a jugar"):
     with open('data/player.json', 'w') as f:
         json.dump({'player': player}, f)
     
-    st.success(f"Iniciando el juego con \n{selected_character}...")
-    st.page_link("pages/Game.py", label="**Playing**", icon="💀")
-    # json.dump({'game': game}, './game')
+    st.success("Done")
