@@ -15,12 +15,21 @@ Sobreviviente: Capaz de dar un esfuerzo extra en los momentos cruciales"""
 def player_init_stats(world,player,params):
     return f"""Dado esta descripción de un personaje de videojuego: {player} y
 esta descripción del mundo: {world} has una asignación a cada uno de estos parámetros: {params}. Cada parámetro
-debe tener un número entre 1 y 12.
+debe tener un número entre 0 y 3.
 La respuesta debe tener estrictamente este formato. Cualquier otro formato o texto fuera de la siguiente estructuta sera una mala respuesta:
 <habilidad> = <cantidad>
 Ejemplo:
-Vida = 5
-Fuerza = 7
+Vida = 2
+Fuerza = 1
+
+Solo da la respuesta de la asignación dentro de estas señales: 
+<asignacion></asignacion>. Ejemplo:
+
+<asignacion>
+Vida = 2
+Fuerza = 1
+</asignacion>
+
 """
 
 def challenge(world, history, player, features):    

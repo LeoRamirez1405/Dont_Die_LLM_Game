@@ -1,10 +1,10 @@
-from src.game_objects import *
-from src.prompts import *
 from API_Fireworks import * 
+from game_objects import *
+from prompts import *
 # from src.API_Gemini import * 
-from src.history import History
-from src.tools import *
-from src.function_call import *
+from history import History
+from tools import *
+from function_call import *
 import openai
 # import random
 
@@ -17,16 +17,17 @@ client = openai.OpenAI(
 class Game:
     def __init__(self):
         self.chat = API().send_simple_request
-        # self.world = self.chat(INITGAME)
-        self.world = None
-        # print('-'*100)
-        # print(self.world)
+        self.world = self.chat(INITGAME)
+        # self.world = None
+        print('-'*100)
+        print(self.world)
         
         # self.destiny = random()
-        self.player = None
+        # self.player = None
         
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
-        # self.player:character = self.initPlayer()
+        self.player:character = self.initPlayer()
+        print(self.player)
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_survives_action = Function_Call(client, [Tools[fc.SURVIVES_ACTION]], fc_survives_action)
         self.fc_possible_action = Function_Call(client, [Tools[fc.POSSIBLE_ACTION]], fc_possible_action)
@@ -36,6 +37,15 @@ class Game:
         self.opportunities = 3
         self.gameOver = False
         
+    def initPlayer(self):
+        options = self.chat(player_init_op(self.world))
+        print(options)
+        response = self.chat(input())
+        init_stats = player_init_stats(self.world, response, character.features_as_types())
+        print(init_stats)
+        result:character = self.fc_init_player.call(init_stats)
+        return result
+    
     def generate_world(self):
         print('WORLD')
         print('-'*100)
@@ -132,5 +142,6 @@ class Game:
         pass
     
 # content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
-# game = Game()
+game = Game()
+game.Play()
 # game.fc_situation_solver_attr.call(content)
