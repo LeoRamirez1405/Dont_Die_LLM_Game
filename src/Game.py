@@ -30,7 +30,7 @@ class Game:
         
         self.history = History()
         self.turn = 0
-        self.opportunities = 3
+        self.opportunities = 2
         self.gameOver = False
         
     def initPlayer(self):
@@ -115,14 +115,15 @@ class Game:
 
         return         
 
-    def challange_Moment(self, world, history, player, features) -> str:
-        request = challenge(world, history, player, features)
+    def challange_Moment(self) -> str:
+        request = challenge(self.world, self.history, self.player)
         return self.chat(request)
 
-    def situation_Solver(self, situation, world, response, player, features) -> str:
-        prompt = post_action_development(situation, world, response, features)
-        result = self.chat(prompt)
-        self.fc_situation_solver.call(result)
+    def situation_Solver(self, situation, response) -> str:
+        result = self.chat(post_action_development(situation, self.world, response))
+        # result = self.chat(prompt)
+        # print(result)
+        result = self.fc_situation_solver.call(result)
         return result
    
     def story_Resumen(self) -> str:
@@ -139,5 +140,11 @@ class Game:
     
 # content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
 game = Game()
+while not game.gameOver:
+    situation = game.challange_Moment()
+    print(situation)
+    response = input()
+    update = game.situation_Solver(situation, response)
+    (game.player).update_skills(update)
 # game.Play()
 # game.fc_situation_solver_attr.call(content)

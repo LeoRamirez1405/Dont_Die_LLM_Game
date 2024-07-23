@@ -1,6 +1,7 @@
 import openai
 import json
 from openai import OpenAI
+from game_objects import character
 
 class Function_Call:
     def __init__(self, client: OpenAI, tool, func):
@@ -62,8 +63,14 @@ class Function_Call:
         # print(local)
         return local
     
-def fc_situation_solver(strength, agility, intelligence, health, luck) -> dict:
+def fc_situation_solver(strength = 0, agility = 0, intelligence = 0, health = 0, luck = 0) -> dict:
     res = dict()
+    res.setdefault('strength', 0) 
+    res.setdefault('intelligence', 0) 
+    res.setdefault('agility', 0) 
+    res.setdefault('health', 0) 
+    res.setdefault('luck', 0) 
+    
     res['strength'] += strength
     res['intelligence'] += intelligence
     res['agility'] += agility

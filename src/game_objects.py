@@ -28,6 +28,13 @@ class character():
     
     def resumen_character(self, update_state: str) -> str:
         self.resumen_character = update_state
+    
+    def update_skills(self,dict):
+        self.strength += dict['strength']
+        self.intelligence += dict['intelligence']
+        self.agility += dict['agility']
+        self.health += dict['health']
+        self.luck += dict['luck']
         
     def features(self):
         return f"Type: {self.type}\nStrength: {self.strength}\nIntelligence: {self.intelligence}\nAgility: {self.agility}\nHealth: {self.health}\nLuck: {self.luck}"
