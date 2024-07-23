@@ -14,8 +14,8 @@ class weapon(item):
         super.__init__(name, description, pow)
 
 class character():
-    def __init__(self, type: int , strength: int , intelligence: int , agelity: int , health: int, luck: int, name: str =""):
-        self.name = name
+    def __init__(self, type: int , strength: int , intelligence: int , agelity: int , health: int, luck: int):
+        # self.name = name
         self.type = type
         self.strength = strength
         self.intelligence = intelligence
@@ -33,7 +33,7 @@ class character():
         return f"Type: {self.type}\nStrength: {self.strength}\nIntelligence: {self.intelligence}\nAgility: {self.agility}\nHealth: {self.health}\nLuck: {self.luck}"
     def __str__(self):
         # Formateando la salida como una cadena que muestra todos los campos
-        return f"Character Info:\nName: {self.name}\nType: {self.type}\nStrength: {self.strength}\nIntelligence: {self.intelligence}\nAgility: {self.agility}\nHealth: {self.health}\nLuck: {self.luck}"
+        return f"Character Info:\nType: {self.type}\nStrength: {self.strength}\nIntelligence: {self.intelligence}\nAgility: {self.agility}\nHealth: {self.health}\nLuck: {self.luck}"
     @staticmethod
     def features_as_types():
         return f"Type: \nStrength: \nIntelligence: \nAgility: \nHealth: \nLuck:"

@@ -1,21 +1,28 @@
 INITGAME = """Eres un creador de situaciones de un juego. Debes crear un mundo donde un jugador deba superar 
 ciertos niveles de acuerdo con el mundo que creaste (Puede ser un mundo de fantasía, ficción, apocalíptico, terror u otro género cualquiera).
 El objetivo es que en dicho mundo se presenten progresivamente desafíos que el jugador deba superar.
-A continuación crea una historia pequeña del mundo."""
+A continuación crea una historia pequeña del mundo. Solo crea la historia, no agregues preguntas ni texto para dialogar. Solo el inicio de una historia"""
 
 def player_init_op(world):
     return f"""Dado el mundo creado: {world}
 Crea 3 tipos diferentes de personajes los cuales podrían interactuar con el mundo. Estos personajes deben ser simples
 y poder ir adquiriendo habilidades con el tiempo. El formato a devolver debe ser el siguiente:
-Ejemplos:
-Arquero: Un aficionado al uso de armas a distancia sin mucha experiencia
-Mago: Posee el don de hacer cosas sobrenaturales pero no sabe controlarlo
-Sobreviviente: Capaz de dar un esfuerzo extra en los momentos cruciales"""
 
+Ejemplos: 
+1. Arquero: Un aficionado al uso de armas a distancia sin mucha experiencia
+2. Mago: Posee el don de hacer cosas sobrenaturales pero no sabe controlarlo
+3. Sobreviviente: Capaz de dar un esfuerzo extra en los momentos cruciales
+
+Solo devuelveme los tipos de los jugadores con su descripcion, sin texto adicional
+"""
+def user_response_option(options, response):
+    return f"""Dado estas opciones {options} y esta respuesta {response}, devuelve el nombre y la descripcion de la opcion escogida.
+            No agregues texto adicional a la respuesta. Solo devuelveme lo que te pido"""
+            
 def player_init_stats(world,player,params):
     return f"""Dado esta descripción de un personaje de videojuego: {player} y
 esta descripción del mundo: {world} has una asignación a cada uno de estos parámetros: {params}. Cada parámetro
-debe tener un número entre 0 y 3.
+debe tener un número entre 0 y 3 Excepto Type, que es el tipo del jugador.
 La respuesta debe tener estrictamente este formato. Cualquier otro formato o texto fuera de la siguiente estructuta sera una mala respuesta:
 <habilidad> = <cantidad>
 Ejemplo:
@@ -26,10 +33,12 @@ Solo da la respuesta de la asignación dentro de estas señales:
 <asignacion></asignacion>. Ejemplo:
 
 <asignacion>
+Type = <tipo>
 Vida = 2
 Fuerza = 1
 </asignacion>
 
+Solo devuelve la asignacion de los parametros del jugador. No des texto adicional, ni siquiera el texto que te acabo de dar
 """
 
 def challenge(world, history, player, features):    

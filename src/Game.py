@@ -18,16 +18,12 @@ class Game:
     def __init__(self):
         self.chat = API().send_simple_request
         self.world = self.chat(INITGAME)
-        # self.world = None
-        print('-'*100)
-        print(self.world)
-        
-        # self.destiny = random()
-        # self.player = None
-        
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
         self.player:character = self.initPlayer()
-        print(self.player)
+        # print('-'*100)
+        # print(self.player)
+        # print('-'*100)
+
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_survives_action = Function_Call(client, [Tools[fc.SURVIVES_ACTION]], fc_survives_action)
         self.fc_possible_action = Function_Call(client, [Tools[fc.POSSIBLE_ACTION]], fc_possible_action)
@@ -40,9 +36,9 @@ class Game:
     def initPlayer(self):
         options = self.chat(player_init_op(self.world))
         print(options)
-        response = self.chat(input())
-        init_stats = player_init_stats(self.world, response, character.features_as_types())
-        print(init_stats)
+        response = self.chat(user_response_option(self.world,input()))
+        init_stats = self.chat(player_init_stats(self.world, response, character.features_as_types()))
+        # print(init_stats)
         result:character = self.fc_init_player.call(init_stats)
         return result
     
@@ -143,5 +139,5 @@ class Game:
     
 # content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
 game = Game()
-game.Play()
+# game.Play()
 # game.fc_situation_solver_attr.call(content)
