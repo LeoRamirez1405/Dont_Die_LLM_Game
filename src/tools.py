@@ -4,6 +4,7 @@ class fc(Enum):
     INIT_PLAYER = 1
     POSSIBLE_ACTION = 2
     SURVIVES_ACTION = 3
+    
 Tools = {
     fc.SITUATION_SOLVER:
         {

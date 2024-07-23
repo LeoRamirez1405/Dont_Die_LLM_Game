@@ -1,42 +1,58 @@
-from game_objects import *
-from prompts import *
-# from API_Fireworks import * 
-from API_Gemini import * 
-from history import History
-from tools import *
-from function_call import *
+from src.game_objects import *
+from src.prompts import *
+from API_Fireworks import * 
+# from src.API_Gemini import * 
+from src.history import History
+from src.tools import *
+from src.function_call import *
 import openai
 # import random
 
-# client = openai.OpenAI(
-#     base_url = "https://api.fireworks.ai/inference/v1",
-#     api_key = "HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5"
-# )
+client = openai.OpenAI(
+    base_url = "https://api.fireworks.ai/inference/v1",
+    # api_key = "HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5"
+    api_key = "wWUu45VYHt84DrkTOGIZnGu6f3DlxqPKcM4r7AVFOa6KGAZA"
+)
 
 class Game:
     def __init__(self):
         self.chat = API().send_simple_request
-        self.world = self.chat(INITGAME)
-        print(self.world)
-        print('-'*100)
+        # self.world = self.chat(INITGAME)
+        self.world = None
+        # print('-'*100)
+        # print(self.world)
+        
         # self.destiny = random()
+        self.player = None
+        
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
-        self.player:character = self.initPlayer()
+        # self.player:character = self.initPlayer()
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_survives_action = Function_Call(client, [Tools[fc.SURVIVES_ACTION]], fc_survives_action)
         self.fc_possible_action = Function_Call(client, [Tools[fc.POSSIBLE_ACTION]], fc_possible_action)
+        
         self.history = History()
         self.turn = 0
         self.opportunities = 3
         self.gameOver = False
         
-    def initPlayer(self):
-        options = self.chat(player_init_op(self.world))
-        print(options)
-        response = self.chat(input())
+    def generate_world(self):
+        print('WORLD')
+        print('-'*100)
+
+        self.world = self.chat(INITGAME)
+        return self.world
+        
+    def get_players_to_select(self, world = None):
+        return self.chat(player_init_op(world)) if world else self.chat(player_init_op(self.world))
+    
+    def select_player(self, response):
+        # response = self.chat(input())
         init_stats = player_init_stats(self.world, response, character.features_as_types())
-        print(init_stats)
+        # print(f'\n\ninit_stats\n{init_stats}')
         result:character = self.fc_init_player.call(init_stats)
+        
+        self.player = result
         return result
     
     # def possible_Action(self, situation, world, response, features) -> bool:
@@ -59,11 +75,11 @@ class Game:
             print(situation)
 
             response = input("¿Cómo va actuar en esta situación?:") # Respuesta del jugador 
+            
             self.chat(UserType.USER.value, response)
             if not self.fc_possible_action.call(post_action_appropriate(situation, self.world, response, self.features())):
                 print("Respuesta no válida. Tus habilidades no se corresponden a las reglas de tu mundo. Pierdes una oportunidad.")
                 self.opportunities-=1
-                
 
             if not self.fc_survives_action.call(post_action_survive(situation, self.world, response)):
                 print("Respuesta no válida. Tus habilidades no son suficientes para superar el reto. Pierdes una oportunidad.")
@@ -115,4 +131,6 @@ class Game:
     def loss_Statistics_Post_Action(self):
         pass
     
-game = Game()
+# content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
+# game = Game()
+# game.fc_situation_solver_attr.call(content)

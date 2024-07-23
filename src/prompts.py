@@ -16,7 +16,7 @@ def player_init_stats(world,player,params):
     return f"""Dado esta descripción de un personaje de videojuego: {player} y
 esta descripción del mundo: {world} has una asignación a cada uno de estos parámetros: {params}. Cada parámetro
 debe tener un número entre 1 y 12.
-La respuesta debe tener este formato:
+La respuesta debe tener estrictamente este formato. Cualquier otro formato o texto fuera de la siguiente estructuta sera una mala respuesta:
 <habilidad> = <cantidad>
 Ejemplo:
 Vida = 5
