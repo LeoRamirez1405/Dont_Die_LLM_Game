@@ -79,18 +79,19 @@ def fc_situation_solver(strength = 0, agility = 0, intelligence = 0, health = 0,
 
     return res
 
-def fc_init_player_(type:str,strength:int, agility:int, intelligence:int, health:int, luck:int) -> dict:
+def fc_init_player_(type:str,strength:int, agility:int, intelligence:int, health:int, luck:int) -> character:
     # print(f"{strength=} {agility=} {intelligence=}")
-    res = dict()
-    # res['name'] = name
-    res['type'] = type
-    res['strength'] = strength
-    res['intelligence'] = intelligence
-    res['agility'] = agility
-    res['health'] = health
-    res['luck'] = luck
-  
-    return res
+    # res = dict()
+    # # res['name'] = name
+    # res['type'] = type
+    # res['strength'] = strength
+    # res['intelligence'] = intelligence
+    # res['agility'] = agility
+    # res['health'] = health
+    # res['luck'] = luck
+    
+    player = character(type,strength,intelligence,agility,health,luck)
+    return player
 
 def fc_possible_action(possible:bool) -> bool:
     """

@@ -14,7 +14,7 @@ class weapon(item):
         super.__init__(name, description, pow)
 
 class character():
-    def __init__(self, type: int , strength: int , intelligence: int , agelity: int , health: int, luck: int):
+    def __init__(self, type: str , strength: int , intelligence: int , agelity: int , health: int, luck: int):
         # self.name = name
         self.type = type
         self.strength = strength

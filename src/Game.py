@@ -122,7 +122,7 @@ class Game:
     def situation_Solver(self, situation, response) -> str:
         result = self.chat(post_action_development(situation, self.world, response))
         # result = self.chat(prompt)
-        # print(result)
+        print(result)
         result = self.fc_situation_solver.call(result)
         return result
    
@@ -146,5 +146,9 @@ while not game.gameOver:
     response = input()
     update = game.situation_Solver(situation, response)
     (game.player).update_skills(update)
+    print("-------------------------")
+    print(game.player)    
+    print("-------------------------")
+
 # game.Play()
 # game.fc_situation_solver_attr.call(content)
