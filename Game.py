@@ -8,10 +8,10 @@ from function_call import *
 import openai
 # import random
 
-client = openai.OpenAI(
-    base_url = "https://api.fireworks.ai/inference/v1",
-    api_key = "HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5"
-)
+# client = openai.OpenAI(
+#     base_url = "https://api.fireworks.ai/inference/v1",
+#     api_key = "HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5"
+# )
 
 class Game:
     def __init__(self):
