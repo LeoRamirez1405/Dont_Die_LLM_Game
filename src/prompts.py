@@ -49,7 +49,7 @@ Ejemplo:
 <response>
 
 
-Solo devuelve lo que generes luego de response pero sin devolver las etiquetas <response>, nada extra
+Solo devuelve lo que generes luego de response pero sin devolver las etiquetas <response>, nada extra y en español
 """
 
 def post_action_survive(situation,world, response):

@@ -76,14 +76,13 @@ class Game:
         while not self.gameOver:
             self.turn += 1
 
-            situation = self.challange_Moment(self.world, self.history, self.player.resumen_character, self.player.features()) # Situación a enfrentarse el jugador en este turno
+            situation = self.challange_Moment() # Situación a enfrentarse el jugador en este turno
 
             print(situation)
 
             response = input("¿Cómo va actuar en esta situación?:") # Respuesta del jugador 
             
-            self.chat(UserType.USER.value, response)
-            if not self.fc_possible_action.call(post_action_appropriate(situation, self.world, response, self.features())):
+            if not self.fc_possible_action.call(post_action_appropriate(situation, self.world, response, features=str(self.player))):
                 print("Respuesta no válida. Tus habilidades no se corresponden a las reglas de tu mundo. Pierdes una oportunidad.")
                 self.opportunities-=1
 
@@ -91,16 +90,21 @@ class Game:
                 print("Respuesta no válida. Tus habilidades no son suficientes para superar el reto. Pierdes una oportunidad.")
                 self.opportunities-=1
             
-            if self.opportunities == 0:
+            if self.opportunities == 0 or self.player.health == 0:
                     #todo implementar baneo por perdida de oportunidades
                     print("Has perdido")
                     self.gameOver = True
                     return 
+                
             #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
 
-            post_action = self.situation_Solver(situation, self.world, response, self.player.features()) # Desenlace de la situación
+            # post_action = self.situation_Solver(situation, response) # Desenlace de la situación
 
-            print(post_action)
+            update = self.situation_Solver(situation, response)
+            (self.player).update_skills(update)
+            print("-------------------------")
+            print(self.player)    
+            print("-------------------------")
 
         #loss_item = self.loss_Item_Post_Action(situation, response)
         #update_weapon = self.update_Weapons_Post_Action(situation, response)
@@ -138,17 +142,5 @@ class Game:
     def loss_Statistics_Post_Action(self):
         pass
     
-# content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
 game = Game()
-while not game.gameOver:
-    situation = game.challange_Moment()
-    print(situation)
-    response = input()
-    update = game.situation_Solver(situation, response)
-    (game.player).update_skills(update)
-    print("-------------------------")
-    print(game.player)    
-    print("-------------------------")
-
-# game.Play()
-# game.fc_situation_solver_attr.call(content)
+game.Play()
