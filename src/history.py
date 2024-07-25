@@ -10,6 +10,7 @@ class History:
         return self.history
         
     def increase(self, challenge, development):
+        print("increasing")
         self.history += f"chalenge:  {challenge} \n development: {development} \n"
         print(self.history)
 

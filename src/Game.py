@@ -2,9 +2,9 @@ from src.game_objects import *
 from src.prompts import *
 from src.API_Fireworks import * 
 # from src.API_Gemini import * 
-from history import History
-from tools import *
-from function_call import *
+from src.history import History
+from src.tools import *
+from src.function_call import *
 import openai
 # import random
 
@@ -17,6 +17,7 @@ client = openai.OpenAI(
 class Game:
 
     FIREFUNCTION_MODEL_MAX_CONTENT = 8192
+    
     def __init__(self):
         self.chat = API().send_simple_request
         self.world = self.chat(INITGAME)
@@ -102,7 +103,7 @@ class Game:
 
             post_action = self.situation_Solver(situation, self.world, response, self.player.features()) # Desenlace de la situación
 
-            print(post_action)
+            print("Action" + post_action)
 
             self.history.increase(situation, post_action)
             
@@ -150,15 +151,15 @@ class Game:
     
 # content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
 game = Game()
-while not game.gameOver:
-    situation = game.challange_Moment()
-    print(situation)
-    response = input()
-    update = game.situation_Solver(situation, response)
-    (game.player).update_skills(update)
-    print("-------------------------")
-    print(game.player)    
-    print("-------------------------")
+# while not game.gameOver:
+#     situation = game.challange_Moment()
+#     print(situation)
+#     response = input()
+#     update = game.situation_Solver(situation, response)
+#     (game.player).update_skills(update)
+#     print("-------------------------")
+#     print(game.player)    
+#     print("-------------------------")
 
-# game.Play()
+game.Play()
 # game.fc_situation_solver_attr.call(content)
