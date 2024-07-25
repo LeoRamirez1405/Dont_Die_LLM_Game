@@ -6,14 +6,22 @@ A continuación crea una historia pequeña del mundo. Solo crea la historia, no 
 def player_init_op(world):
     return f"""Dado el mundo creado: {world}
 Crea 3 tipos diferentes de personajes los cuales podrían interactuar con el mundo. Estos personajes deben ser simples
-y poder ir adquiriendo habilidades con el tiempo. El formato a devolver debe ser el siguiente:
-
+y poder ir adquiriendo habilidades con el tiempo. El formato a devolver debe ser el siguiente, un diccionario de python:\n
+"""+"""
 Ejemplos: 
-1. Arquero: Un aficionado al uso de armas a distancia sin mucha experiencia
-2. Mago: Posee el don de hacer cosas sobrenaturales pero no sabe controlarlo
-3. Sobreviviente: Capaz de dar un esfuerzo extra en los momentos cruciales
+{
+    "Explorador": "Un aventurero experimentado en la exploración de la superficie",
+    "Ingeniero": "Un experto en tecnología capaz de reparar y mejorar máquinas",
+    "Luchador": "Un guerrero entrenado en el combate cuerpo a cuerpo"
+}
 
-Solo devuelveme los tipos de los jugadores con su descripcion, sin texto adicional
+{
+    "Arqueologo": "Un experto en la búsqueda y análisis de antigüedades valiosas",
+    "Hechicera": "Una maestra de las artes mágicas, capaz de manipular elementos y energías",
+    "Navegante": "Un experto marinero, hábil en la navegación y supervivencia en alta mar"
+}
+
+Solo devuelveme el diccionario de los personajes, sin texto adicional
 """
 def user_response_option(options, response):
     return f"""Dado estas opciones {options} y esta respuesta {response}, devuelve el nombre y la descripcion de la opcion escogida.
@@ -49,7 +57,7 @@ Ejemplo:
 <response>
 
 
-Solo devuelve lo que generes luego de response pero sin devolver las etiquetas <response>, nada extra
+Solo devuelve lo que generes luego de response pero sin devolver las etiquetas <response>, nada extra y en español
 """
 
 def post_action_survive(situation,world, response):
@@ -57,14 +65,20 @@ def post_action_survive(situation,world, response):
 de que dicha acción lo haría sobrevivir) o 0 (En caso contrario)."""
 
 def post_action_appropriate(situation,world, response, features):
-    return f"""Dada la siguiente situación: {situation} en este mundo: {world}, esta respuesta del jugador {response} y las habilidades del mismo {features}. Valora esta respuesta del jugador y responde 1 (en caso
-de que dicha acción se corresponde con lo que puede hacer el jugador con los skills que tiene y en el mundo en el que se encuentra) o 0 (En caso contrario)."""
+    return f"""Dada la siguiente situación: {situation} en este mundo: {world}, esta respuesta del jugador {response} y las habilidades del mismo {features}. Valora esta respuesta del jugador, ten en cuenta las estadisticas del jugador y el tipo del mismo. 
+Ten en cuenta que si es de un tipo las actividades que haga deben ser exclusivamente de ese tipo de jugador y que las estadisticas son para tener una idea de cuan bueno puede ser el jugador en ciertas areas y asi saber sus limitaciones a la hora de actuar.
+Sabiendo esto y responde 1 (en caso
+de que dicha acción se corresponde con lo que puede hacer el jugador con los skills que tiene y en el mundo en el que se encuentra) o 0 (En caso contrario)"""
 
 def post_action_development(challenge, world, action):
     return f"""Di como se desenvolvió el challenge {challenge} que ocurre en este mundo {world} cuya respuesta del jugador fue {action}. Dime que obtuvo el jugador segun su acción tomada en esta situación, ten en cuenta que la respuesta que quiero
-es para actualizar las estadísticas del jugador. Solo devuelve lo que te pido, ningun texto adicional. devuelve la respuesta en este formato:
+es para actualizar las estadísticas del jugador. ten en cuenta que <int> debe ser un numero del -5 >= <int> <=5 y si el jugador pierde por alguna casualidad, la salud debe ser 0. Ten en cuenta que debe ser un desafio,
+da igual lo que haya pasado, haz que el desenvolvimiento de a accion tenga un giro inesperado y el jugador pierda y gane habilidades en funcion de su creatividad, que no todo sea positivo
+. Esto anteriormente dicho debe verse reflejado en las <update-habilidades>. Solo devuelve lo que te pido, ningun texto adicional. devuelve la respuesta en este formato:
 <desenvolvimiento de la situación>
-<update-habilidades>
+<update-habilidades> en el formato:"""+"""
+{'strength': <int>, 'intelligence': <int>, 'agility': <int>, 'health': <int>, 'luck': <int>}
+
 """
     
 def bad_result(situation, world, action, features):

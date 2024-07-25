@@ -1,6 +1,6 @@
-from src.game_objects import *
-from src.prompts import *
-from src.API_Fireworks import * 
+from game_objects import *
+from prompts import *
+from API_Fireworks import * 
 # from src.API_Gemini import * 
 from src.history import History
 from src.tools import *
@@ -15,11 +15,15 @@ client = openai.OpenAI(
 )
 
 class Game:
+
+    FIREFUNCTION_MODEL_MAX_CONTENT = 8192
+    
     def __init__(self):
         self.chat = API().send_simple_request
         self.world = ""
         #self.world = self.chat(INITGAME)
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
+        self.option_players = self.options() 
         #self.player:character = self.initPlayer()
         self.player:character = None
         # print('-'*100)
@@ -34,10 +38,14 @@ class Game:
         self.turn = 0
         self.opportunities = 2
         self.gameOver = False
+    
+    def options(self):
+        options = self.chat(player_init_op(self.world))
+        options = eval(options)
+        print(options)
+        return options
         
     def initPlayer(self):
-        options = self.chat(player_init_op(self.world))
-        print(options)
         response = self.chat(user_response_option(self.world,input()))
         init_stats = self.chat(player_init_stats(self.world, response, character.features_as_types()))
         # print(init_stats)
@@ -78,31 +86,48 @@ class Game:
         while not self.gameOver:
             self.turn += 1
 
-            situation = self.challange_Moment(self.world, self.history, self.player.resumen_character, self.player.features()) # Situación a enfrentarse el jugador en este turno
+            if self.opportunities == 0 or self.player.health == 0:
+                    #todo implementar baneo por perdida de oportunidades
+                    print("Has perdido")
+                    self.gameOver = True
+                    return 
+                
+            situation = self.challange_Moment() # Situación a enfrentarse el jugador en este turno
 
             print(situation)
 
             response = input("¿Cómo va actuar en esta situación?:") # Respuesta del jugador 
             
-            self.chat(UserType.USER.value, response)
-            if not self.fc_possible_action.call(post_action_appropriate(situation, self.world, response, self.features())):
+            if not self.fc_possible_action.call(post_action_appropriate(situation, self.world, response, features=str(self.player))):
                 print("Respuesta no válida. Tus habilidades no se corresponden a las reglas de tu mundo. Pierdes una oportunidad.")
                 self.opportunities-=1
+                continue
 
             if not self.fc_survives_action.call(post_action_survive(situation, self.world, response)):
                 print("Respuesta no válida. Tus habilidades no son suficientes para superar el reto. Pierdes una oportunidad.")
                 self.opportunities-=1
+                continue
             
-            if self.opportunities == 0:
-                    #todo implementar baneo por perdida de oportunidades
-                    print("Has perdido")
-                    self.gameOver = True
-                    return 
+            
+                
             #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
 
-            post_action = self.situation_Solver(situation, self.world, response, self.player.features()) # Desenlace de la situación
+            # post_action = self.situation_Solver(situation, response) # Desenlace de la situación
 
-            print(post_action)
+            
+            
+            update, development = self.situation_Solver(situation, response)
+            (self.player).update_skills(update)
+            print("-------------------------")
+            print(self.player)    
+            print("-------------------------")
+
+
+            self.history.increase(situation, development)
+            
+            token_estimate = self.history.get_token_estimate()
+            if token_estimate >= Game.FIREFUNCTION_MODEL_MAX_CONTENT:
+                self.history.summary()
 
         #loss_item = self.loss_Item_Post_Action(situation, response)
         #update_weapon = self.update_Weapons_Post_Action(situation, response)
@@ -122,11 +147,11 @@ class Game:
         return self.chat(request)
 
     def situation_Solver(self, situation, response) -> str:
-        result = self.chat(post_action_development(situation, self.world, response))
+        development = self.chat(post_action_development(situation, self.world, response))
         # result = self.chat(prompt)
-        print(result)
-        result = self.fc_situation_solver.call(result)
-        return result
+        print(development)
+        result = self.fc_situation_solver.call(development)
+        return result, development
    
     def story_Resumen(self) -> str:
         return self.history.summary()
@@ -140,17 +165,5 @@ class Game:
     def loss_Statistics_Post_Action(self):
         pass
     
-# # content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
-# game = Game()
-# while not game.gameOver:
-#     situation = game.challange_Moment()
-#     print(situation)
-#     response = input()
-#     update = game.situation_Solver(situation, response)
-#     (game.player).update_skills(update)
-#     print("-------------------------")
-#     print(game.player)    
-#     print("-------------------------")
-
-# game.Play()
-# game.fc_situation_solver_attr.call(content)
+game = Game()
+game.Play()
