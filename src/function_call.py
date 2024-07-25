@@ -1,7 +1,7 @@
 import openai
 import json
 from openai import OpenAI
-from src.game_objects import character
+from game_objects import character
 
 class Function_Call:
     def __init__(self, client: OpenAI, tool, func):
