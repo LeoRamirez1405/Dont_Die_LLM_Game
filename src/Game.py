@@ -1,6 +1,6 @@
-from src.game_objects import *
-from src.prompts import *
-from src.API_Fireworks import * 
+from game_objects import *
+from prompts import *
+from API_Fireworks import * 
 # from src.API_Gemini import * 
 from history import History
 from tools import *
@@ -19,6 +19,7 @@ class Game:
         self.chat = API().send_simple_request
         self.world = self.chat(INITGAME)
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
+        self.option_players = self.options() 
         self.player:character = self.initPlayer()
         # print('-'*100)
         # print(self.player)
@@ -32,10 +33,14 @@ class Game:
         self.turn = 0
         self.opportunities = 2
         self.gameOver = False
+    
+    def options(self):
+        options = self.chat(player_init_op(self.world))
+        options = eval(options)
+        print(options)
+        return options
         
     def initPlayer(self):
-        options = self.chat(player_init_op(self.world))
-        print(options)
         response = self.chat(user_response_option(self.world,input()))
         init_stats = self.chat(player_init_stats(self.world, response, character.features_as_types()))
         # print(init_stats)
