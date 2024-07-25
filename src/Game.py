@@ -15,6 +15,8 @@ client = openai.OpenAI(
 )
 
 class Game:
+
+    FIREFUNCTION_MODEL_MAX_CONTENT = 8192
     def __init__(self):
         self.chat = API().send_simple_request
         self.world = self.chat(INITGAME)
@@ -101,6 +103,14 @@ class Game:
             post_action = self.situation_Solver(situation, self.world, response, self.player.features()) # Desenlace de la situación
 
             print(post_action)
+
+            self.history.increase(situation, post_action)
+            
+            token_estimate = self.history.get_token_estimate()
+            if token_estimate >= Game.FIREFUNCTION_MODEL_MAX_CONTENT:
+                self.history.summary()
+
+            
 
         #loss_item = self.loss_Item_Post_Action(situation, response)
         #update_weapon = self.update_Weapons_Post_Action(situation, response)
