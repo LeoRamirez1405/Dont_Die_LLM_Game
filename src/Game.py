@@ -111,7 +111,6 @@ class Game:
             
             
             update, development = self.situation_Solver(situation, response)
-            print(f"Update: {update}")
             (self.player).update_skills(update)
             print("-------------------------")
             print(self.player)    
