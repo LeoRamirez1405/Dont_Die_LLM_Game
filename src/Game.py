@@ -2,9 +2,9 @@ from src.game_objects import *
 from src.prompts import *
 from src.API_Fireworks import * 
 # from src.API_Gemini import * 
-from src.history import History
-from src.tools import *
-from src.function_call import *
+from history import History
+from tools import *
+from function_call import *
 import openai
 # import random
 
@@ -17,25 +17,31 @@ client = openai.OpenAI(
 class Game:
     def __init__(self):
         self.chat = API().send_simple_request
-        # self.world = self.chat(INITGAME)
-        self.world = None
-        # print('-'*100)
-        # print(self.world)
-        
-        # self.destiny = random()
-        self.player = None
-        
+        self.world = self.chat(INITGAME)
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
-        # self.player:character = self.initPlayer()
+        self.player:character = self.initPlayer()
+        # print('-'*100)
+        # print(self.player)
+        # print('-'*100)
+
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_survives_action = Function_Call(client, [Tools[fc.SURVIVES_ACTION]], fc_survives_action)
         self.fc_possible_action = Function_Call(client, [Tools[fc.POSSIBLE_ACTION]], fc_possible_action)
         
         self.history = History()
         self.turn = 0
-        self.opportunities = 3
+        self.opportunities = 2
         self.gameOver = False
         
+    def initPlayer(self):
+        options = self.chat(player_init_op(self.world))
+        print(options)
+        response = self.chat(user_response_option(self.world,input()))
+        init_stats = self.chat(player_init_stats(self.world, response, character.features_as_types()))
+        # print(init_stats)
+        result:character = self.fc_init_player.call(init_stats)
+        return result
+    
     def generate_world(self):
         print('WORLD')
         print('-'*100)
@@ -109,14 +115,15 @@ class Game:
 
         return         
 
-    def challange_Moment(self, world, history, player, features) -> str:
-        request = challenge(world, history, player, features)
+    def challange_Moment(self) -> str:
+        request = challenge(self.world, self.history, self.player)
         return self.chat(request)
 
-    def situation_Solver(self, situation, world, response, player, features) -> str:
-        prompt = post_action_development(situation, world, response, features)
-        result = self.chat(prompt)
-        self.fc_situation_solver.call(result)
+    def situation_Solver(self, situation, response) -> str:
+        result = self.chat(post_action_development(situation, self.world, response))
+        # result = self.chat(prompt)
+        print(result)
+        result = self.fc_situation_solver.call(result)
         return result
    
     def story_Resumen(self) -> str:
@@ -132,5 +139,16 @@ class Game:
         pass
     
 # content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
-# game = Game()
+game = Game()
+while not game.gameOver:
+    situation = game.challange_Moment()
+    print(situation)
+    response = input()
+    update = game.situation_Solver(situation, response)
+    (game.player).update_skills(update)
+    print("-------------------------")
+    print(game.player)    
+    print("-------------------------")
+
+# game.Play()
 # game.fc_situation_solver_attr.call(content)

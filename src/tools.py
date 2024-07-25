@@ -49,10 +49,7 @@ Tools = {
              "parameters": {
                  "type": "object",
                  "properties": {
-                     "name": {
-                         "type": "string",
-                         "description": "The player's name."
-                     },
+                     
                      "type": {
                          "type": "string",
                          "description": "The player's type."
@@ -78,7 +75,7 @@ Tools = {
                          "description": "The player's luck attribute."
                      }
                  },
-                 "required": ["name","type","strength", "agility", "intelligence", "health", "luck"]
+                 "required": ["type","strength", "agility", "intelligence", "health", "luck"]
             },
         },
     },
