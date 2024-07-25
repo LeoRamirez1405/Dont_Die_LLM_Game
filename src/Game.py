@@ -81,6 +81,12 @@ class Game:
         while not self.gameOver:
             self.turn += 1
 
+            if self.opportunities == 0 or self.player.health == 0:
+                    #todo implementar baneo por perdida de oportunidades
+                    print("Has perdido")
+                    self.gameOver = True
+                    return 
+                
             situation = self.challange_Moment() # Situación a enfrentarse el jugador en este turno
 
             print(situation)
@@ -90,16 +96,14 @@ class Game:
             if not self.fc_possible_action.call(post_action_appropriate(situation, self.world, response, features=str(self.player))):
                 print("Respuesta no válida. Tus habilidades no se corresponden a las reglas de tu mundo. Pierdes una oportunidad.")
                 self.opportunities-=1
+                continue
 
             if not self.fc_survives_action.call(post_action_survive(situation, self.world, response)):
                 print("Respuesta no válida. Tus habilidades no son suficientes para superar el reto. Pierdes una oportunidad.")
                 self.opportunities-=1
+                continue
             
-            if self.opportunities == 0 or self.player.health == 0:
-                    #todo implementar baneo por perdida de oportunidades
-                    print("Has perdido")
-                    self.gameOver = True
-                    return 
+            
                 
             #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
 
