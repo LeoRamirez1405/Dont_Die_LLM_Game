@@ -19,7 +19,7 @@ class API:
         return self.client.chat.completions.create(
             model="accounts/fireworks/models/firefunction-v2",
             messages=[{"role": role, "content": f"{message}"}],
-            temperature=0.1).choices[0].message.content        
+            temperature=0.5).choices[0].message.content        
         
 # class API:
 #     def __init__(self) -> None: 

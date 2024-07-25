@@ -21,12 +21,13 @@ class Game:
     def __init__(self):
         self.chat = API().send_simple_request
         self.world = self.chat(INITGAME)
+        print('-'*100)
+        print(self.world)
+        print('-'*100)
+        
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
         self.option_players = self.options() 
         self.player:character = self.initPlayer()
-        # print('-'*100)
-        # print(self.player)
-        # print('-'*100)
 
         self.fc_situation_solver = Function_Call(client, [Tools[fc.SITUATION_SOLVER]], fc_situation_solver)
         self.fc_survives_action = Function_Call(client, [Tools[fc.SURVIVES_ACTION]], fc_survives_action)
@@ -84,7 +85,7 @@ class Game:
         while not self.gameOver:
             self.turn += 1
 
-            if self.opportunities == 0 or self.player.health == 0:
+            if self.opportunities == 0 or self.player.health <= 0:
                     #todo implementar baneo por perdida de oportunidades
                     print("Has perdido")
                     self.gameOver = True
@@ -146,7 +147,7 @@ class Game:
 
     def situation_Solver(self, situation, response) -> str:
         development = self.chat(post_action_development(situation, self.world, response))
-        # result = self.chat(prompt)
+        print("\n")
         print(development)
         result = self.fc_situation_solver.call(development)
         return result, development
