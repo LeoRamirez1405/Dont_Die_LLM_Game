@@ -109,16 +109,16 @@ class Game:
             # post_action = self.situation_Solver(situation, response) # Desenlace de la situación
 
             
-
             
-            update = self.situation_Solver(situation, response)
+            update, development = self.situation_Solver(situation, response)
+            print(f"Update: {update}")
             (self.player).update_skills(update)
             print("-------------------------")
             print(self.player)    
             print("-------------------------")
 
 
-            self.history.increase(situation, update)
+            self.history.increase(situation, development)
             
             token_estimate = self.history.get_token_estimate()
             if token_estimate >= Game.FIREFUNCTION_MODEL_MAX_CONTENT:
@@ -142,11 +142,11 @@ class Game:
         return self.chat(request)
 
     def situation_Solver(self, situation, response) -> str:
-        result = self.chat(post_action_development(situation, self.world, response))
+        development = self.chat(post_action_development(situation, self.world, response))
         # result = self.chat(prompt)
-        print(result)
-        result = self.fc_situation_solver.call(result)
-        return result
+        print(development)
+        result = self.fc_situation_solver.call(development)
+        return result, development
    
     def story_Resumen(self) -> str:
         return self.history.summary()
