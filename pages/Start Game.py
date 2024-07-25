@@ -50,8 +50,8 @@ try:
         game.world = data['world']
         
     with open('data/player.json', 'r') as f:
-            data = json.load(f)
-            game.player = get_palyer(data['player'])
+        data = json.load(f)
+        game.player = get_palyer(data['player'])
         
     # Set game state
     try:  
@@ -63,8 +63,9 @@ try:
     except:
         save_game_state(game)
     
-    st.success('Loaded players')
-        
+    st.success('Loaded player')
+    st.write(str(game.player))
+          
 except Exception as e:
     st.warning('You need to generate the world and select a player first')
     st.error(e)
@@ -105,13 +106,38 @@ def show_history():
     for msg in st.session_state.history:
         with st.chat_message(msg['role']):
             st.write(msg['content'])
+            
+def situation_error(error):
+    st.session_state.history.append({
+    'role': UserType.ASSISTANT.value, 'content': error
+    })
+    
+    save({'history': st.session_state.history}, files.History.value)
+    save({'response': ''}, files.Response.value)
+    
+    game.opportunities-=1
+    save_game_state(game)
+    
+    st.rerun()
+    
+def update_palyer(game: Game):
+     save({
+        "player": {
+        "type": game.player.type,
+        "strength": game.player.strength,
+        "intelligence": game.player.intelligence,
+        "agility": game.player.agility,
+        "health": game.player.health,
+        "luck": game.player.luck}
+    }, 'player')
 
 while not game.gameOver:
     show_history()
     
     if len(st.session_state.situation) == 0:
         game.turn += 1
-        situation = game.challange_Moment(game.world, game.history, game.player.resumen_character, game.player.features()) # Situación a enfrentarse el jugador en este turn
+        situation = game.challange_Moment() # Situación a enfrentarse el jugador en este turn
+        # situation = game.challange_Moment(game.world, game.history, game.player.resumen_character, game.player.features()) # Situación a enfrentarse el jugador en este turn
         st.session_state.situation = situation
         save({'situation': situation}, files.Situation.value)
         
@@ -126,54 +152,30 @@ while not game.gameOver:
         
         st.rerun()
         
-    print('\n\n\n')
-    print('Waiting for user input')
-    print('\n\n\n')
-    response = st.chat_input() 
+    # response = st.chat_input() 
     
-    if not response:
-        st.stop()
-        
-    print('\n\n\n')
-    print('Received user input')
-    print('\n\n\n')
-    st.session_state.history.append({
-        'role': UserType.USER.value, 'content': response
-    })
-    save({'history': st.session_state.history}, files.History.value) 
-    save({'response': response}, files.Response.value)
+    with open("data/response.json", 'r') as f:
+        res = json.load(f)["response"]
+        if len(res) > 0:
+            response = res 
+        else:
+            response = st.chat_input() 
+            if not response:
+                st.stop()
+
+            st.session_state.history.append({
+                'role': UserType.USER.value, 'content': response
+            })
+            save({'history': st.session_state.history}, files.History.value) 
+            save({'response': response}, files.Response.value)
      
-    # game.chat(UserType.USER.value, response)
     if not game.fc_possible_action.call(post_action_appropriate(st.session_state.situation, game.world, response, game.player.features())):
         error = "Respuesta no válida. Tus habilidades no se corresponden a las reglas de tu mundo. Pierdes una oportunidad."
-        
-        st.session_state.history.append({
-        'role': UserType.ASSISTANT.value, 'content': error
-        })
-        save({'history': st.session_state.history}, files.History.value)
-        
-        save({'response': ''}, files.Response.value)
-        
-        # st.chat_message(UserType.ASSISTANT.value, error)
-        game.opportunities-=1
-        
-        save_game_state(game)
-        
-        st.rerun()
-        # continue
+        situation_error(error)
     
     if not game.fc_survives_action.call(post_action_survive(st.session_state.situation, game.world, response)):
         error = "Respuesta no válida. Tus habilidades no son suficientes para superar el reto. Pierdes una oportunidad."
-        st.session_state.hitory.append({
-        'role': UserType.ASSISTANT.value, 'content': error
-        })
-        save({'history': st.session_state.history}, files.History.value)
-        
-        st.chat_messaje(UserType.ASSISTANT.value, error)
-        game.opportunities-=1
-        
-        save_game_state(game)
-        continue
+        situation_error(error)
     
     if game.opportunities == 0:
             #todo implementar baneo por perdida de oportunidades
@@ -191,7 +193,11 @@ while not game.gameOver:
     print('\n\n\n')
     print('Processing accion')
     print('\n\n\n')
-    post_action = game.situation_Solver(situation, game.world, response, game.player.features()) # Desenlace de la situació
+    post_action, update = game.situation_Solver(st.session_state.situation, response) # Desenlace de la situació
+    
+    update_palyer(game)
+    
+    # post_action = game.situation_Solver(st.session_state.situation, game.world, response, game.player.features()) # Desenlace de la situació
     print('\n\n\npost_action')
     print(post_action)
     print('\n\n\n')

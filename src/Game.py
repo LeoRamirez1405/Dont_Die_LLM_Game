@@ -2,9 +2,9 @@ from src.game_objects import *
 from src.prompts import *
 from src.API_Fireworks import * 
 # from src.API_Gemini import * 
-from history import History
-from tools import *
-from function_call import *
+from src.history import History
+from src.tools import *
+from src.function_call import *
 import openai
 # import random
 
@@ -17,9 +17,11 @@ client = openai.OpenAI(
 class Game:
     def __init__(self):
         self.chat = API().send_simple_request
-        self.world = self.chat(INITGAME)
+        self.world = ""
+        #self.world = self.chat(INITGAME)
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
-        self.player:character = self.initPlayer()
+        #self.player:character = self.initPlayer()
+        self.player:character = None
         # print('-'*100)
         # print(self.player)
         # print('-'*100)
@@ -138,17 +140,17 @@ class Game:
     def loss_Statistics_Post_Action(self):
         pass
     
-# content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
-game = Game()
-while not game.gameOver:
-    situation = game.challange_Moment()
-    print(situation)
-    response = input()
-    update = game.situation_Solver(situation, response)
-    (game.player).update_skills(update)
-    print("-------------------------")
-    print(game.player)    
-    print("-------------------------")
+# # content = "You are in a dangerous situation and your atributes are: strength: 0, agility: 1, intelligence: 0, health: 1, luck: 0"
+# game = Game()
+# while not game.gameOver:
+#     situation = game.challange_Moment()
+#     print(situation)
+#     response = input()
+#     update = game.situation_Solver(situation, response)
+#     (game.player).update_skills(update)
+#     print("-------------------------")
+#     print(game.player)    
+#     print("-------------------------")
 
 # game.Play()
 # game.fc_situation_solver_attr.call(content)
