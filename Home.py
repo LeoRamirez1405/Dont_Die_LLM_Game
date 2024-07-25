@@ -39,12 +39,27 @@ except:
 # # Muestra el mundo del juego
 st.write(world)
 
-# Botón para regenerar el mundo
-if st.sidebar.button("Regenerar mundo"):
+def reset_game():
     delete_object('world')
     delete_object('players_options')
     delete_object('game_state')
+    delete_object('player')
+    delete_object('history')
+    delete_object('situation')
     
     st.rerun()
+
+# Botón para regenerar el mundo
+if st.sidebar.button("Regenerar mundo"):
+    st.warning("El estado del juego será reiniciado. Perderá la partia anterior")
+    st.sidebar.form_submit_button(label="Reiniciar", on_click=reset_game, use_container_width=True)
+    # delete_object('world')
+    # delete_object('players_options')
+    # delete_object('game_state')
+    # delete_object('player')
+    # delete_object('history')
+    # delete_object('situation')
+    # 
+    # st.rerun()
     
 st.stop()

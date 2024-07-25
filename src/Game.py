@@ -1,6 +1,6 @@
-from API_Fireworks import * 
-from game_objects import *
-from prompts import *
+from src.game_objects import *
+from src.prompts import *
+from src.API_Fireworks import * 
 # from src.API_Gemini import * 
 from history import History
 from tools import *
