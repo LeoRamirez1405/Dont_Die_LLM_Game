@@ -6,14 +6,22 @@ A continuación crea una historia pequeña del mundo. Solo crea la historia, no 
 def player_init_op(world):
     return f"""Dado el mundo creado: {world}
 Crea 3 tipos diferentes de personajes los cuales podrían interactuar con el mundo. Estos personajes deben ser simples
-y poder ir adquiriendo habilidades con el tiempo. El formato a devolver debe ser el siguiente:
-
+y poder ir adquiriendo habilidades con el tiempo. El formato a devolver debe ser el siguiente, un diccionario de python:\n
+"""+"""
 Ejemplos: 
-1. Arquero: Un aficionado al uso de armas a distancia sin mucha experiencia
-2. Mago: Posee el don de hacer cosas sobrenaturales pero no sabe controlarlo
-3. Sobreviviente: Capaz de dar un esfuerzo extra en los momentos cruciales
+{
+    "Explorador": "Un aventurero experimentado en la exploración de la superficie",
+    "Ingeniero": "Un experto en tecnología capaz de reparar y mejorar máquinas",
+    "Luchador": "Un guerrero entrenado en el combate cuerpo a cuerpo"
+}
 
-Solo devuelveme los tipos de los jugadores con su descripcion, sin texto adicional
+{
+    "Arqueologo": "Un experto en la búsqueda y análisis de antigüedades valiosas",
+    "Hechicera": "Una maestra de las artes mágicas, capaz de manipular elementos y energías",
+    "Navegante": "Un experto marinero, hábil en la navegación y supervivencia en alta mar"
+}
+
+Solo devuelveme el diccionario de los personajes, sin texto adicional
 """
 def user_response_option(options, response):
     return f"""Dado estas opciones {options} y esta respuesta {response}, devuelve el nombre y la descripcion de la opcion escogida.
@@ -49,7 +57,7 @@ Ejemplo:
 <response>
 
 
-Solo devuelve lo que generes luego de response pero sin devolver las etiquetas <response>, nada extra
+Solo devuelve lo que generes luego de response pero sin devolver las etiquetas <response>, nada extra y en español
 """
 
 def post_action_survive(situation,world, response):
