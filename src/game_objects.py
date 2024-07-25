@@ -30,6 +30,7 @@ class character():
         self.resumen_character = update_state
     
     def update_skills(self,dict):
+        print(dict)
         self.strength += dict['strength']
         self.intelligence += dict['intelligence']
         self.agility += dict['agility']
