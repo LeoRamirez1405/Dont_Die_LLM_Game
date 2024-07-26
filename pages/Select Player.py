@@ -3,38 +3,6 @@ from src.Game import Game
 from src.prompts import *
 import json
 
-def get_players_options(options_list):
-    players_options = []
-    
-    # print(f'get_players_options: {len(options_list)}')
-    opt = 0
-    while opt < len(options_list) - 1:
-        # print('OPTION')
-        # print(f'{options_list[opt]} \n {options_list[opt+1]}')
-        players_options.append(f'{options_list[opt]} \n {options_list[opt+1]}')
-        opt += 2
-
-    return players_options
-
-# def extract_characters(description: str):
-#     # Dividir la cadena en líneas separadas por "\n"
-#     lines = description.split('\n')
-    
-#     # Inicializar la lista que contendrá los personajes
-#     characters = []
-    
-#     # Recorrer cada línea
-#     for line in lines:
-#         # Dividir la línea en dos partes: el nombre del personaje y la descripción
-#         partes = line.split(': ', 1)
-        
-#         # Si hay al menos dos partes, agregar a la lista
-#         if len(partes) == 2:
-#             personaje = partes[1].strip()
-#             characters.append(personaje)
-    
-#     return characters
-
 game = Game()
 
 # Loading the world
@@ -58,9 +26,15 @@ try:
     st.success('Loaded players')
     
 except:
-    character_options_str = game.get_players_to_select()
-    players_options_list = character_options_str.split('\n')
-    # players_options_list = get_players_options(character_options_str.split('\n'))
+    options: dict = game.options()
+    # print(type(options))
+    
+    players_options_list = [k+': '+v+'\n' for k, v in options.items()]
+    print(players_options_list)
+    character_options_str = ''
+    for index, opt in enumerate(players_options_list):
+        print(opt)
+        character_options_str += f'{index+1}. {opt}.' 
 
     with open('data/players_options.json', 'w') as f:
         json.dump({
@@ -81,8 +55,6 @@ except:
 st.write(character_options_str)
 
 index_selected_character = st.selectbox("Elige tu personaje:", [i+1 for i in range(3)])
-# st.write(len(players_options_list))
-# st.write(f"index_selected_character: {index_selected_character - 1}")
 selected_character = players_options_list[index_selected_character - 1]
 
 # Botón para iniciar el juego
@@ -99,4 +71,4 @@ if st.sidebar.button("Comenzar a jugar"):
     with open('data/player.json', 'w') as f:
         json.dump({'player': player}, f)
     
-    st.success("Done")
+    st.success("Done. Puede comenzar el juego")

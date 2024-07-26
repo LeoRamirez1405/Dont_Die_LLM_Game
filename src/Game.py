@@ -1,6 +1,6 @@
-from game_objects import *
-from prompts import *
-from API_Fireworks import * 
+from src.game_objects import *
+from src.prompts import *
+from src.API_Fireworks import * 
 # from src.API_Gemini import * 
 from src.history import History
 from src.tools import *
@@ -23,7 +23,7 @@ class Game:
         self.world = ""
         #self.world = self.chat(INITGAME)
         self.fc_init_player = Function_Call(client, [Tools[fc.INIT_PLAYER]], fc_init_player_)
-        self.option_players = self.options() 
+        self.option_players = None 
         #self.player:character = self.initPlayer()
         self.player:character = None
         # print('-'*100)
@@ -43,6 +43,8 @@ class Game:
         options = self.chat(player_init_op(self.world))
         options = eval(options)
         print(options)
+        
+        self.option_players = options
         return options
         
     def initPlayer(self):
@@ -165,5 +167,5 @@ class Game:
     def loss_Statistics_Post_Action(self):
         pass
     
-game = Game()
-game.Play()
+# game = Game()
+# game.Play()

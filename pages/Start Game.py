@@ -13,6 +13,12 @@ class files(Enum):
     History = 'history'
     Situation = 'situation'
     Response = 'response'
+    
+class state_msg(Enum):
+    warning = 0
+    error = 1
+    success = 2
+    none = 3
 
 def save(json_file, file):
     try:
@@ -27,7 +33,8 @@ def save_game_state(game: Game):
             json.dump({
                 'turn': game.turn,
                 'opportunities': game.opportunities,
-                'gameOver': game.gameOver
+                'gameOver': game.gameOver,
+                'history': game.history.history
             }, f)
     except Exception as e:
         st.error(e)
@@ -88,7 +95,8 @@ try:
     print('Loaded history')
 except:
     st.session_state.history = []
-    save({'history': []}, files.History.value)
+    st.session_state.history.append(str(game.player))
+    save({'history': st.session_state.history}, files.History.value)
     print('Generated history')    
 
 try:  
@@ -105,11 +113,18 @@ except:
 def show_history():
     for msg in st.session_state.history:
         with st.chat_message(msg['role']):
-            st.write(msg['content'])
+            if msg['state'] == state_msg.error:
+                st.error(msg['content'])
+            if msg['state'] == state_msg.warning:
+                st.warning(msg['content'])
+            if msg['state'] == state_msg.success:
+                st.success(msg['content'])
+            else:
+                st.write(msg['content'])
             
 def situation_error(error):
     st.session_state.history.append({
-    'role': UserType.ASSISTANT.value, 'content': error
+    'role': UserType.ASSISTANT.value, 'content': error, 'state': state_msg.error
     })
     
     save({'history': st.session_state.history}, files.History.value)
@@ -137,15 +152,14 @@ while not game.gameOver:
     if len(st.session_state.situation) == 0:
         game.turn += 1
         situation = game.challange_Moment() # Situación a enfrentarse el jugador en este turn
-        # situation = game.challange_Moment(game.world, game.history, game.player.resumen_character, game.player.features()) # Situación a enfrentarse el jugador en este turn
         st.session_state.situation = situation
         save({'situation': situation}, files.Situation.value)
         
         st.session_state.history.append({
-        'role': UserType.SYSTEM.value, 'content': situation
+        'role': UserType.SYSTEM.value, 'content': situation, 'state': state_msg.none
         })
         st.session_state.history.append({
-        'role': UserType.ASSISTANT.value, 'content': '¿Cómo va actuar en esta situación?'
+        'role': UserType.ASSISTANT.value, 'content': '¿Cómo va actuar en esta situación?', 'state': state_msg.none
         })
         
         save({'history': st.session_state.history}, files.History.value)
@@ -164,7 +178,7 @@ while not game.gameOver:
                 st.stop()
 
             st.session_state.history.append({
-                'role': UserType.USER.value, 'content': response
+                'role': UserType.USER.value, 'content': response, 'state': state_msg.none
             })
             save({'history': st.session_state.history}, files.History.value) 
             save({'response': response}, files.Response.value)
@@ -189,24 +203,31 @@ while not game.gameOver:
             save({'history': st.session_state.history}, files.History.value)
             break 
             
-    #* Resultado de la acción (cambios de estadisticas del personaje, items, armas
-    print('\n\n\n')
-    print('Processing accion')
-    print('\n\n\n')
-    post_action, update = game.situation_Solver(st.session_state.situation, response) # Desenlace de la situació
+    update, development = game.situation_Solver(st.session_state.situation, response)
+    (game.player).update_skills(update)
+    update_palyer(game.player)
     
-    update_palyer(game)
-    
-    # post_action = game.situation_Solver(st.session_state.situation, game.world, response, game.player.features()) # Desenlace de la situació
-    print('\n\n\npost_action')
-    print(post_action)
-    print('\n\n\n')
-    
-    st.session_state.history.append({'role': UserType.SYSTEM.value, 'contente': post_action})
-    save({'history': st.session_state.history}, files.History.value)
+    # st.session_state.history.append({'role': UserType.SYSTEM.value, 'contente': post_action})
+    # save({'history': st.session_state.history}, files.History.value)
   
     st.session_state.situation = ''
     save({'situation': ''}, files.Situation.value)
     
+    print("-------------------------")
+    print(game.player)    
+    print("-------------------------")
+    
+    game.history.increase(st.session_state.situation, development)
+    st.session_state.history.append({'role': UserType.ASSISTANT.value, 'contente': development + update, 'state': state_msg.success})
+    save({'history': st.session_state.history}, files.History.value)
+    
+    token_estimate = game.history.get_token_estimate()
+    if token_estimate >= Game.FIREFUNCTION_MODEL_MAX_CONTENT:
+        game.history.summary()
+        
+    save_game_state()
+        
     st.rerun()
+
+
     
