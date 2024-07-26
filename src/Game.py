@@ -88,7 +88,7 @@ class Game:
         while not self.gameOver:
             self.turn += 1
 
-            if self.opportunities == 0 or self.player.health == 0:
+            if self.opportunities == 0 or self.player.health <= 0:
                     #todo implementar baneo por perdida de oportunidades
                     print("Has perdido")
                     self.gameOver = True
@@ -150,7 +150,7 @@ class Game:
 
     def situation_Solver(self, situation, response) -> str:
         development = self.chat(post_action_development(situation, self.world, response))
-        # result = self.chat(prompt)
+        print("\n")
         print(development)
         result = self.fc_situation_solver.call(development)
         return result, development

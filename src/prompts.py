@@ -1,7 +1,7 @@
 INITGAME = """Eres un creador de situaciones de un juego. Debes crear un mundo donde un jugador deba superar 
 ciertos niveles de acuerdo con el mundo que creaste (Puede ser un mundo de fantasía, ficción, apocalíptico, terror u otro género cualquiera).
 El objetivo es que en dicho mundo se presenten progresivamente desafíos que el jugador deba superar.
-A continuación crea una historia pequeña del mundo. Solo crea la historia, no agregues preguntas ni texto para dialogar. Solo el inicio de una historia"""
+A continuación crea una historia pequeña del mundo. Solo crea la historia, no agregues preguntas ni texto para dialogar. Solo el inicio de una historia en español"""
 
 def player_init_op(world):
     return f"""Dado el mundo creado: {world}
@@ -61,8 +61,9 @@ Solo devuelve lo que generes luego de response pero sin devolver las etiquetas <
 """
 
 def post_action_survive(situation,world, response):
-    return f"""Dada la siguiente situación: {situation} en este mundo: {world} y esta respuesta del jugador {response}. Valora esta respuesta del jugador y responde 1 (en caso
-de que dicha acción lo haría sobrevivir) o 0 (En caso contrario)."""
+    return f"""Dada la siguiente situación: {situation} en este mundo: {world} y esta respuesta del jugador {response}. Valora esta respuesta del jugador y di si el jugador puede hacer o no
+lo que respondio teniendo en cuenta el mundo en el que se encuentra y las caracteriticas del mismo, para saber si es valida la accion o no. responde 1 (en caso
+de que dicha acción lo haría sobrevivir) o 0 (En caso contrario o en caso de que la accion no se corresponde con lo apto por el mundo en el que se encuentra pues se quiere que sea lo mas acorde posible)."""
 
 def post_action_appropriate(situation,world, response, features):
     return f"""Dada la siguiente situación: {situation} en este mundo: {world}, esta respuesta del jugador {response} y las habilidades del mismo {features}. Valora esta respuesta del jugador, ten en cuenta las estadisticas del jugador y el tipo del mismo. 
