@@ -1,6 +1,7 @@
 import streamlit as st
 from src.Game import Game
 from src.prompts import *
+from src.game_objects import character
 import json
 
 game = Game()
@@ -33,7 +34,7 @@ except:
     print(players_options_list)
     character_options_str = ''
     for index, opt in enumerate(players_options_list):
-        print(opt)
+        # print(opt)
         character_options_str += f'{index+1}. {opt}.' 
 
     with open('data/players_options.json', 'w') as f:
@@ -50,6 +51,19 @@ try:
             player = data['player']
 except:
     player = None
+    
+def save_player(player: character):
+    with open('data/player.json', 'w') as f:
+        json.dump({
+        "player": {
+        "type": player.type,
+        "strength": player.strength,
+        "intelligence": player.intelligence,
+        "agility": player.agility,
+        "health": player.health,
+        "luck": player.luck}
+    }, f)
+    
 
 # Opciones de selección de personajes
 st.write(character_options_str)
@@ -63,12 +77,12 @@ if st.sidebar.button("Comenzar a jugar"):
         st.warning('You need to select a player first')
         st.stop()
     
-    player = game.select_player(selected_character)
+    print('selected_character: ', selected_character)
+    player: character = game.select_player(selected_character)
     st.session_state.game = game
     
-    st.success(f"Iniciando el juego con: \n {selected_character[:4]}...")
+    st.success(f"Iniciando el juego con: \n {str(player)}...")
     
-    with open('data/player.json', 'w') as f:
-        json.dump({'player': player}, f)
+    save_player(player)
     
-    st.success("Done. Puede comenzar el juego")
+    st.success("Done. Puede comenzar el juego. Vaya a la página \'Start Game\' ")
