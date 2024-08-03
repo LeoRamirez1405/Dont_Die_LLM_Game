@@ -66,7 +66,8 @@ class Game:
     
     def select_player(self, response):
         # response = self.chat(input())
-        init_stats = player_init_stats(self.world, response, character.features_as_types())
+        init_stats = self.chat(player_init_stats(self.world, response, character.features_as_types()))
+        # init_stats = player_init_stats(self.world, response, character.features_as_types())
         # print(f'\n\ninit_stats\n{init_stats}')
         result:character = self.fc_init_player.call(init_stats)
         
