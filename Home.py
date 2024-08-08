@@ -36,8 +36,8 @@ except:
     # situation = st.session_state.situation = ''
     st.success('Created game')
 
-# # Muestra el mundo del juego
 st.write(world)
+st.warning("Si decide regenerar el mundo el estado del juego será reiniciado. Perderá la partia anterior")
 
 def reset_game():
     delete_object('world')
@@ -46,20 +46,11 @@ def reset_game():
     delete_object('player')
     delete_object('history')
     delete_object('situation')
-    
-    st.rerun()
+    delete_object('response')
+
+    # st.rerun()
 
 # Botón para regenerar el mundo
-if st.sidebar.button("Regenerar mundo"):
-    st.warning("El estado del juego será reiniciado. Perderá la partia anterior")
-    st.sidebar.form_submit_button(label="Reiniciar", on_click=reset_game, use_container_width=True)
-    # delete_object('world')
-    # delete_object('players_options')
-    # delete_object('game_state')
-    # delete_object('player')
-    # delete_object('history')
-    # delete_object('situation')
-    # 
-    # st.rerun()
-    
+st.sidebar.button("Regenerar mundo", on_click=reset_game)
+             
 st.stop()

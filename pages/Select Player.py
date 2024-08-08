@@ -35,7 +35,7 @@ except:
     character_options_str = ''
     for index, opt in enumerate(players_options_list):
         # print(opt)
-        character_options_str += f'{index+1}. {opt}.' 
+        character_options_str += f'{index+1}. {opt}.\n' 
 
     with open('data/players_options.json', 'w') as f:
         json.dump({

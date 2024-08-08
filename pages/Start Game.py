@@ -6,6 +6,7 @@ from src.API_Fireworks import UserType
 import json
 from enum import Enum
 
+st.set_page_config(page_title="Don't Die", page_icon="👻")
 class files(Enum):
     Player = 'player'
     Game_State = 'game_state'
