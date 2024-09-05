@@ -50,8 +50,8 @@ Solo devuelve la asignacion de los parametros del jugador. No des texto adiciona
 """
 
 def challenge(world, history, player):    
-    return f"""En el mundo: {world}. Dado el siguiente historial de desafios: {history} y el siguiente jugador: {player}
-genera un nuevo desafio para el jugador de forma tal que el mismo deba utilizar su ingenio para luchar y sobrevivir. Solo devuelve el desafío actual, ninguna información extra
+    return f"""En el mundo: {world}. Dado la siguiente historia: {history} y el siguiente jugador: {player}
+genera un desafio a continuacion acorde a la historia que tenga sentido en la escena para el jugador de forma tal que el mismo deba utilizar su ingenio para luchar y sobrevivir. Solo devuelve el desafío actual, ninguna información extra
 Genera la situación. 
 Ejemplo:
 <response>

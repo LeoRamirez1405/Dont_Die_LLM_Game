@@ -173,6 +173,7 @@ def update_palyer(player: character):
         "luck": player.luck}
     }, 'player')
 
+situation = ""
 while not game.gameOver:
     show_history()
     
@@ -241,6 +242,8 @@ while not game.gameOver:
     (game.player).update_skills(update)
     update_palyer(game.player)
     
+    game.set_History(situation, development)
+
     st.session_state.situation = ''
     save({'situation': ''}, files.Situation.value)
     
@@ -267,7 +270,8 @@ while not game.gameOver:
         game.history.summary()
         
     save_game_state(game)
-        
+
+    print(f"History: {game.history}")
     st.rerun()
 
 

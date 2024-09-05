@@ -11,7 +11,7 @@ import openai
 client = openai.OpenAI(
     base_url = "https://api.fireworks.ai/inference/v1",
     # api_key = "HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5"
-    api_key = "wWUu45VYHt84DrkTOGIZnGu6f3DlxqPKcM4r7AVFOa6KGAZA"
+    api_key = "fw_3ZV2CFand3ZcyqqcY8M2PUK3"
 )
 
 class Game:
@@ -148,6 +148,13 @@ class Game:
     def challange_Moment(self) -> str:
         request = challenge(self.world, self.history, self.player)
         return self.chat(request)
+    
+    def set_History(self, situation, development):
+        self.history.increase(situation, development)
+            
+        token_estimate = self.history.get_token_estimate()
+        if token_estimate >= Game.FIREFUNCTION_MODEL_MAX_CONTENT:
+            self.history.summary()
 
     def situation_Solver(self, situation, response) -> str:
         development = self.chat(post_action_development(situation, self.world, response))

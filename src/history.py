@@ -15,6 +15,9 @@ class History:
 
     def get_token_estimate(self):
         return len(self.history.split()) * 2
+
+    def __str__(self):
+        return self.history
     
     def summary(self):
         prompt = f"""
