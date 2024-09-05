@@ -124,8 +124,18 @@ def show_history():
         """
         st.write(player_info)
 
-    # with st.chat_message('assistant'):
-    #     st.write(st.session_state.history[0])
+    if len(st.session_state.history) < 3:
+        msg = st.session_state.history[0]
+        with st.chat_message(msg['role']):
+            if msg['state'] == state_msg.error.value:
+                st.error(msg['content'])
+            elif msg['state'] == state_msg.warning.value:
+                st.warning(msg['content'])
+            elif msg['state'] == state_msg.success.value:
+                st.success(msg['content'])
+            else:
+                st.write(msg['content'])
+        
     for msg in st.session_state.history[len(st.session_state.history) - 3:]:
         with st.chat_message(msg['role']):
             if msg['state'] == state_msg.error.value:
