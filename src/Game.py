@@ -11,7 +11,8 @@ import openai
 client = openai.OpenAI(
     base_url = "https://api.fireworks.ai/inference/v1",
     # api_key = "HAicU1zXB0SL3O8NfsRDROgkPGXzQiH7jAw9SAhObuLZvbe5"
-    api_key = "wWUu45VYHt84DrkTOGIZnGu6f3DlxqPKcM4r7AVFOa6KGAZA"
+    # api_key = "wWUu45VYHt84DrkTOGIZnGu6f3DlxqPKcM4r7AVFOa6KGAZA"
+    api_key = "cyHs04n0MYX4351y5DcTrRx8cMDQbk3o0l8i5YZQ2IJriyPO"
 )
 
 class Game:

@@ -12,7 +12,9 @@ class API:
     def __init__(self) -> None:    
         self.client = openai.OpenAI(
     base_url = "https://api.fireworks.ai/inference/v1",
-    api_key = "DA4O3HbHkhzLPA1nC7uZ4WAyCavRTTYNJxs0iWVxvosDxK2A"
+    # api_key = "DA4O3HbHkhzLPA1nC7uZ4WAyCavRTTYNJxs0iWVxvosDxK2A"
+    api_key = "cyHs04n0MYX4351y5DcTrRx8cMDQbk3o0l8i5YZQ2IJriyPO"
+    
     )
      
     def send_simple_request(self,message:str,role:UserType = UserType.USER.value):
