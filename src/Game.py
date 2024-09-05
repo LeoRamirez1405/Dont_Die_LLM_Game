@@ -146,6 +146,13 @@ class Game:
     def challange_Moment(self) -> str:
         request = challenge(self.world, self.history, self.player)
         return self.chat(request)
+    
+    def set_History(self, situation, development):
+        self.history.increase(situation, development)
+            
+        token_estimate = self.history.get_token_estimate()
+        if token_estimate >= Game.FIREFUNCTION_MODEL_MAX_CONTENT:
+            self.history.summary()
 
     def situation_Solver(self, situation, response) -> str:
         development = self.chat(post_action_development(situation, self.world, response))
