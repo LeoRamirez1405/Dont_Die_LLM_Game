@@ -5,6 +5,7 @@ from src.prompts import *
 from src.API_Fireworks import UserType
 import json
 from enum import Enum
+import os
 
 st.set_page_config(page_title="Don't Die", page_icon="👻")
 class files(Enum):
@@ -73,7 +74,7 @@ try:
         save_game_state(game)
     
 except Exception as e:
-    st.warning('You need to generate the world and select a player first')
+    st.warning('Antes debe generar un mudo y seleccionar un jugador.')
     # st.error(e)
     st.stop()
     
@@ -284,6 +285,32 @@ while not game.gameOver:
     print(f"History: {game.history}")
     st.rerun()
 
+def reset_game():
+    delete_object('world')
+    delete_object('players_options')
+    delete_object('game_state')
+    delete_object('player')
+    delete_object('history')
+    delete_object('situation')
+    delete_object('response')
 
 if game.gameOver:
     show_history()
+    
+st.sidebar.button("Reiniciar juego", on_click=reset_game)
+st.sidebar.warning("Si decide reiniciar el juego perdera todos los avances de la partida actual. Debe ir a la ventana 'Inicio'.")
+    
+    
+def delete_object(object):
+    path = 'data/'
+    try:
+      os.remove(f'{path}{object}.json')
+      print("Archivo borrado correctamente.")
+    except FileNotFoundError:
+      print("Error: El archivo no se encuentra.")
+      
+
+
+    # st.rerun()
+
+# Botón para regenerar el mundo

@@ -31,9 +31,7 @@ except:
         json.dump({'world': world}, f)
     
     st.session_state.game = game
-        
-    # history = st.session_state.history = []
-    # situation = st.session_state.situation = ''
+
     st.success('Created game')
 
 st.write(world)

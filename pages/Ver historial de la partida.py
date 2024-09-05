@@ -55,7 +55,7 @@ try:
         st.session_state.history = data['history']
     # print('Loaded history')
 except:
-    st.warning('You need to generate the world and select a player first.')
+    st.warning('Antes debe generar un mundo y seleccionar un jugador.')
     st.stop()
         
 def show_history():

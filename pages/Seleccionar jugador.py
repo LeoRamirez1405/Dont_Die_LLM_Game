@@ -16,7 +16,7 @@ try:
         world = game.world
 except Exception as e:
     # st.error(e)
-    st.warning('You need to generate the world first')
+    st.warning('Antes debe generar un mundo')
     st.stop()
     
 # Loading the players options
@@ -103,15 +103,15 @@ if st.sidebar.button("Comenzar a jugar"):
         st.stop()
     
     if not selected_character:
-        st.warning('You need to select a player first')
+        st.warning('Antes debe seleccionar un jugador')
         st.stop()
     
     print('selected_character: ', selected_character)
     player: character = game.select_player(selected_character)
     st.session_state.game = game
     
-    st.success(f"Iniciando el juego con: \n {str(player)}...")
+    # st.success(f"Iniciando el juego con: \n {str(player)}...")
     
     save_player(player)
     
-    st.success("Done. Puede comenzar el juego. Vaya a la página \'Start Game\' ")
+    st.success("Puede comenzar el juego. Vaya a la página \'Jugar\' ")
