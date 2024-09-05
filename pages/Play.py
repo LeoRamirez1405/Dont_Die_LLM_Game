@@ -72,19 +72,6 @@ try:
     except:
         save_game_state(game)
     
-    # st.success('Loaded player')
-    # player_info = f"""
-    # Jugador: \n\n
-    # Tipo: {game.player.type} \n
-    # Fuerza: {game.player.strength} \n
-    # Inteligencia: {game.player.intelligence} \n
-    # Agilidad: {game.player.agility} \n
-    # Salud: {game.player.health} \n
-    # Suerte: {game.player.luck} \n
-    # # {game.player.features()}
-    # """
-    # st.write(player_info)
-          
 except Exception as e:
     st.warning('You need to generate the world and select a player first')
     # st.error(e)
@@ -138,7 +125,7 @@ def show_history():
 
     # with st.chat_message('assistant'):
     #     st.write(st.session_state.history[0])
-    for msg in st.session_state.history:
+    for msg in st.session_state.history[len(st.session_state.history) - 3:]:
         with st.chat_message(msg['role']):
             if msg['state'] == state_msg.error.value:
                 st.error(msg['content'])
@@ -168,7 +155,21 @@ def situation_error(error):
         
     st.session_state.history.append({'role': UserType.ASSISTANT.value, 'content': player_info + f"\n*❤ Oportunidades: {game.opportunities}", 'state': state_msg.success.value})
     
-    if game.opportunities <= 0:
+    check_game_status()
+        
+    st.session_state.history.append({
+    'role': UserType.ASSISTANT.value, 'content': '¿Cómo va actuar en esta situación?', 'state': state_msg.none.value
+    })
+    
+    save({'history': st.session_state.history}, files.History.value)
+    save({'response': ''}, files.Response.value)
+    
+    save_game_state(game)
+    
+    st.rerun()
+    
+def check_game_status():
+    if game.opportunities <= 0 or game.player.health <= 0:
         #todo implementar baneo por perdida de oportunidades
         print("Has perdido")
         game.gameOver = True
@@ -182,17 +183,6 @@ def situation_error(error):
         save_game_state(game)
         
         st.rerun()
-        
-    st.session_state.history.append({
-    'role': UserType.ASSISTANT.value, 'content': '¿Cómo va actuar en esta situación?', 'state': state_msg.none.value
-    })
-    
-    save({'history': st.session_state.history}, files.History.value)
-    save({'response': ''}, files.Response.value)
-    
-    save_game_state(game)
-    
-    st.rerun()
     
 def update_palyer(player: character):
      save({
@@ -256,20 +246,8 @@ while not game.gameOver:
         error = "Respuesta no válida. Tus habilidades no son suficientes para superar el reto. Pierdes una oportunidad."
         situation_error(error)
     
-    # if game.opportunities <= 0:
-    #     #todo implementar baneo por perdida de oportunidades
-    #     print("Has perdido")
-    #     game.gameOver = True
-    #     save_game_state(game)
-        
-    #     st.session_state.history.append({
-    #     'role': UserType.ASSISTANT.value, 'content': 'Game Over', 'state': state_msg.warning.value
-    #     })
-    #     save({'history': st.session_state.history}, files.History.value)
-        
-    #     st.rerun()
-    #     # break 
-            
+    check_game_status()
+
     update, development = game.situation_Solver(st.session_state.situation, response)
     (game.player).update_skills(update)
     update_palyer(game.player)
