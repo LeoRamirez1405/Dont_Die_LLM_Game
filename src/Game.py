@@ -111,13 +111,10 @@ class Game:
                 self.opportunities-=1
                 continue
             
-            
-                
+        
             #* Resultado de la acción (cambios de estadisticas del personaje, items, armas)
 
-            # post_action = self.situation_Solver(situation, response) # Desenlace de la situación
-
-            
+            # post_action = self.situation_Solver(situation, response) # Desenlace de la situación        
             
             update, development = self.situation_Solver(situation, response)
             (self.player).update_skills(update)

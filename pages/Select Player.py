@@ -4,6 +4,8 @@ from src.prompts import *
 from src.game_objects import character
 import json
 
+st.set_page_config(page_title="Don't Die", page_icon="👻")
+
 game = Game()
 
 # Loading the world

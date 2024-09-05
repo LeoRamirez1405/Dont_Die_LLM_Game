@@ -154,10 +154,38 @@ def situation_error(error):
     'role': UserType.ASSISTANT.value, 'content': error, 'state': state_msg.error.value
     })
     
+    player_info = f"""
+        **Jugador: \n
+        *Tipo: {game.player.type},
+        *🦾Fuerza: {game.player.strength},
+        *🧠 Inteligencia: {game.player.intelligence}, 
+        *🏃‍♀️Agilidad: {game.player.agility},
+        *💊Salud: {game.player.health},
+        *🍀Suerte: {game.player.luck}
+        """
+        
+    st.session_state.history.append({'role': UserType.ASSISTANT.value, 'content': development + "\n " + player_info + f"\n*❤ Oportunidades: {game.opportunities}", 'state': state_msg.success.value})
+    
+    st.session_state.history.append({
+    'role': UserType.ASSISTANT.value, 'content': '¿Cómo va actuar en esta situación?', 'state': state_msg.none.value
+    })
+
     save({'history': st.session_state.history}, files.History.value)
     save({'response': ''}, files.Response.value)
     
     game.opportunities-=1
+    if game.opportunities <= 0:
+        #todo implementar baneo por perdida de oportunidades
+        print("Has perdido")
+        game.gameOver = True
+        save_game_state(game)
+        
+        st.session_state.history.append({
+        'role': UserType.ASSISTANT.value, 'content': 'Game Over', 'state': state_msg.warning.value
+        })
+        save({'history': st.session_state.history}, files.History.value)
+        
+        st.rerun()
     save_game_state(game)
     
     st.rerun()
@@ -223,19 +251,19 @@ while not game.gameOver:
         error = "Respuesta no válida. Tus habilidades no son suficientes para superar el reto. Pierdes una oportunidad."
         situation_error(error)
     
-    if game.opportunities == 0:
-            #todo implementar baneo por perdida de oportunidades
-            print("Has perdido")
-            game.gameOver = True
-            save_game_state(game)
-            
-            st.session_state.history.append({
-            'role': UserType.ASSISTANT.value, 'content': 'Game Over', 'state': state_msg.warning.value
-            })
-            save({'history': st.session_state.history}, files.History.value)
-            
-            st.rerun()
-            # break 
+    if game.opportunities <= 0:
+        #todo implementar baneo por perdida de oportunidades
+        print("Has perdido")
+        game.gameOver = True
+        save_game_state(game)
+        
+        st.session_state.history.append({
+        'role': UserType.ASSISTANT.value, 'content': 'Game Over', 'state': state_msg.warning.value
+        })
+        save({'history': st.session_state.history}, files.History.value)
+        
+        st.rerun()
+        # break 
             
     update, development = game.situation_Solver(st.session_state.situation, response)
     (game.player).update_skills(update)
