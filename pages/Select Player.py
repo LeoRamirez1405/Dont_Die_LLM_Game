@@ -47,10 +47,33 @@ except:
     
     st.success('Generated players')
     
+def get_palyer(player_json):
+    return character(
+        player_json['type'],
+        player_json['strength'],
+        player_json['intelligence'],
+        player_json['agility'],
+        player_json['health'],
+        player_json['luck']
+    )
+
 try:
     with open('data/player.json', 'r') as f:
             data = json.load(f)
             player = data['player']
+            game.player = get_palyer(data['player'])
+            player_info = f"""
+            **Jugador**: \n\n
+            *Tipo*: {game.player.type},
+            *🦾Fuerza*: {game.player.strength},
+            *🧠 Inteligencia*: {game.player.intelligence}, 
+            *🏃‍♀️Agilidad*: {game.player.agility},
+            *💊Salud*: {game.player.health},
+            *🍀Suerte*: {game.player.luck}
+            """
+            st.write('Selected Player')
+            st.success(player_info)
+            st.stop()
 except:
     player = None
     
@@ -75,6 +98,10 @@ selected_character = players_options_list[index_selected_character - 1]
 
 # Botón para iniciar el juego
 if st.sidebar.button("Comenzar a jugar"):
+    if game.player:
+        st.warning('Ya has seleccionado un personaje. Para cambiarlo, reinicia el juego')
+        st.stop()
+    
     if not selected_character:
         st.warning('You need to select a player first')
         st.stop()
