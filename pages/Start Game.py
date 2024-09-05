@@ -87,7 +87,7 @@ try:
           
 except Exception as e:
     st.warning('You need to generate the world and select a player first')
-    st.error(e)
+    # st.error(e)
     st.stop()
     
 try:  
@@ -164,11 +164,10 @@ def situation_error(error):
         *🍀Suerte: {game.player.luck}
         """
         
+    game.opportunities -= 1    
+        
     st.session_state.history.append({'role': UserType.ASSISTANT.value, 'content': player_info + f"\n*❤ Oportunidades: {game.opportunities}", 'state': state_msg.success.value})
     
-    
-    
-    game.opportunities-=1
     if game.opportunities <= 0:
         #todo implementar baneo por perdida de oportunidades
         print("Has perdido")
@@ -179,6 +178,8 @@ def situation_error(error):
         'role': UserType.ASSISTANT.value, 'content': 'Game Over', 'state': state_msg.warning.value
         })
         save({'history': st.session_state.history}, files.History.value)
+
+        save_game_state(game)
         
         st.rerun()
         

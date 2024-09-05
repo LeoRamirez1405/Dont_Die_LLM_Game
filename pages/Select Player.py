@@ -15,7 +15,7 @@ try:
         game.world = data['world']
         world = game.world
 except Exception as e:
-    st.error(e)
+    # st.error(e)
     st.warning('You need to generate the world first')
     st.stop()
     
